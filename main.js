@@ -212,47 +212,6 @@ window.start = function start() {
     }
 };
 
-    const launcherEasting = document.getElementById('initial-launcher-easting');
-    const launcherNorthing = document.getElementById('initial-launcher-northing');
-    const launcherHeight = document.getElementById('initial-launcher-height');
-
-    let valid = true;
-
-    // Validate launcher easting and northing inputs (5 digits)
-    if (launcherEasting && launcherEasting.value.length !== 5) {
-      document.getElementById('initial-easting-error').textContent = "Coordinates must be 5 digits long.";
-      valid = false;
-    } else if (launcherEasting) {
-      document.getElementById('initial-easting-error').textContent = "";
-    }
-
-    if (launcherNorthing && launcherNorthing.value.length !== 5) {
-      document.getElementById('initial-northing-error').textContent = "Coordinates must be 5 digits long.";
-      valid = false;
-    } else if (launcherNorthing) {
-      document.getElementById('initial-northing-error').textContent = "";
-    }
-
-    // Validate launcher height input (ensure it's a number)
-    if (launcherHeight && isNaN(launcherHeight.value)) {
-      document.getElementById('initial-height-error').textContent = "Please enter a valid number for height.";
-      valid = false;
-    } else if (launcherHeight) {
-      document.getElementById('initial-height-error').textContent = "";
-    }
-
-    // If valid, transition to the main interface
-    if (valid) {
-      document.getElementById('initial-overlay').style.display = 'none';
-      document.getElementById('main-container').style.display = 'flex';
-
-      // Set launcher grid position based on initial inputs
-      document.getElementById('launcher-easting').value = launcherEasting.value;
-      document.getElementById('launcher-northing').value = launcherNorthing.value;
-      document.getElementById('launcher-height').value = launcherHeight.value;
-    }
-  }
-
   function calculate() {
     const mission = fireMissions[selectedMissionIndex];
 
