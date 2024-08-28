@@ -170,7 +170,7 @@
   }
 
 // Ensure the function is globally accessible
-window.start = function start() {
+  function start() {
     const launcherEasting = document.getElementById('initial-launcher-easting');
     const launcherNorthing = document.getElementById('initial-launcher-northing');
     const launcherHeight = document.getElementById('initial-launcher-height');
