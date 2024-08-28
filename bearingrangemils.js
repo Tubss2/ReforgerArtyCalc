@@ -119,6 +119,7 @@ function main(eastingLauncher, northingLauncher, heightLauncher,
     };
 }
 
+// Function to calculate results based on observer data
 function observerGridCalc(northingLauncher, eastingLauncher, heightLauncher,
                           eastingObserver, northingObserver, observerBearingToTarget, observerRangeToTarget, heightTarget) {
     
@@ -140,6 +141,5 @@ function observerGridCalc(northingLauncher, eastingLauncher, heightLauncher,
     };
 }
 
-// Example usage
-const result = observerGridCalc(1000, 1000, 10, 7596, 4299, 90, 1000, 120);
-console.log(result);
+// Export the main and observerGridCalc functions for use in other modules
+export { main, observerGridCalc };
