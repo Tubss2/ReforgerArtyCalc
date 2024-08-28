@@ -1,4 +1,3 @@
-<script type="module">
   // Import the required functions
   import { main, observerGridCalc } from './bearingrangemils.js';
 
