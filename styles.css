@@ -1,0 +1,240 @@
+ <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      background-color: #161C1A;
+      color: #DFA25A;
+    }
+
+    .container {
+      display: none; /* Hidden initially */
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .launcher-grid {
+      height: 10%;
+      background-color: #4F5857;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .launcher-grid label {
+      color: #DFA25A;
+    }
+
+    .launcher-grid input, select {
+      margin: 0 10px;
+      padding: 5px;
+      background-color: #52635B;
+      border: 1px solid #161C1A;
+      color: #DFA25A;
+    }
+
+    .main-content {
+      display: flex;
+      flex-grow: 1;
+    }
+
+    .fire-missions {
+      width: 12%;
+      background-color: #4F5857;
+      padding: 10px;
+    }
+
+    .fire-missions .mission-box {
+      padding: 10px;
+      background-color: #52635B;
+      color: #DFA25A;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .fire-missions .mission-box.active {
+      background-color: #66BB83;
+      color: #161C1A;
+      margin-left: 10px;
+      font-weight: bold;
+    }
+
+    .fire-missions .mission-box input {
+      width: 100%;
+      border: none;
+      background-color: transparent;
+      font-size: 14px;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .fire-missions .edit-btn, .fire-missions .delete-btn {
+      position: absolute;
+      right: 5px;
+      display: none;
+      background-color: transparent;
+      border: none;
+      color: #DFA25A;
+      cursor: pointer;
+    }
+
+    .fire-missions .edit-btn {
+      right: 35px;
+    }
+
+    .fire-missions .delete-btn {
+      right: 5px;
+    }
+
+    .fire-missions .mission-box:hover .edit-btn, 
+    .fire-missions .mission-box:hover .delete-btn {
+      display: inline-block;
+    }
+
+    .fire-missions .new-mission {
+      background-color: #66BB83;
+      color: #161C1A;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .fire-modes {
+      width: 88%;
+      padding: 20px;
+    }
+
+    .fire-modes .tabs {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+
+    .fire-modes .tabs button {
+      flex: 1;
+      padding: 10px;
+      margin: 0 5px;
+      cursor: pointer;
+      border: none;
+      background-color: #4F5857;
+      color: #DFA25A;
+    }
+
+    .fire-modes .tabs .adjust-fire {
+      background-color: #DFA25A;
+      color: #161C1A;
+    }
+
+    .inputs-container input {
+      margin: 5px 0;
+      padding: 10px;
+      width: 100%;
+      max-width: 300px;
+      background-color: #52635B;
+      border: none;
+      color: #161c1a;
+    }
+
+    .error {
+      color: #DFA25A;
+      font-size: 12px;
+    }
+
+    .calculate-button {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .calculate-button button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #66BB83;
+      color: #161C1A;
+      border: none;
+      cursor: pointer;
+    }
+
+    .firing-solution {
+      height: 10%;
+      background-color: #4F5857;
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      color: #66BB83;
+    }
+
+    .firing-solution div {
+      text-align: center;
+    }
+
+    .firing-solution div.vertical-line {
+      border-left: 2px solid #66BB83;
+      height: 100%;
+    }
+
+    /* Initial overlay */
+    .initial-overlay {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #161C1A;
+    }
+
+    .initial-overlay h1 {
+      color: #DFA25A;
+      margin-bottom: 20px;
+    }
+
+    .initial-overlay input {
+      margin: 5px 0;
+      padding: 10px;
+      background-color: #52635B;
+      border: 1px solid #DFA25A;
+      color: #DFA25A;
+      max-width: 300px;
+    }
+
+    .initial-overlay .start-button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #66BB83;
+      color: #161C1A;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .disabled-button {
+      background-color: #4F5857 !important; /* Greyed out */
+      cursor: not-allowed !important;
+      position: relative;
+      text-decoration: line-through; /* Draws a line over the text */
+      color: #888; /* Light grey text to indicate disabled state */
+    }
+
+    .disabled-button::after {
+      content: "❌"; /* Adds an X symbol */
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: #DFA25A;
+    }
+  </style>
+</head>
+<body>

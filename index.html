@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artillery Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="initial-overlay" id="initial-overlay">
+  <h1>To start, enter your launcher's current grid position</h1>
+  <input type="text" id="initial-launcher-easting" placeholder="Launcher Easting (5 digits)">
+  <div class="error" id="initial-easting-error"></div>
+  <input type="text" id="initial-launcher-northing" placeholder="Launcher Northing (5 digits)">
+  <div class="error" id="initial-northing-error"></div>
+  <input type="text" id="initial-launcher-height" placeholder="Launcher Height (Meters)">
+  <div class="error" id="initial-height-error"></div>
+  <button class="start-button" onclick="start()">START</button>
+</div>
+
+<div class="container" id="main-container">
+  <div class="launcher-grid">
+    <div>
+      <label for="launcher-easting">Launcher Easting: </label><input type="text" id="launcher-easting">
+    </div>
+    <div>
+      <label for="launcher-northing">Launcher Northing: </label><input type="text" id="launcher-northing">
+    </div>
+    <div>
+      <label for="launcher-height">Launcher Height: </label><input type="text" id="launcher-height">
+    </div>
+    <div>
+      <label for="select-gun">Select Gun: </label>
+      <select id="select-gun">
+        <option value="WZ turrets M119">WZ turrets M119</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="fire-missions">
+      <div class="mission-box active" id="mission-0">
+        <input type="text" value="Mission 1" readonly>
+        <button class="edit-btn" onclick="renameMission(0)">✏️</button>
+        <button class="delete-btn" onclick="deleteMission(0)">❌</button>
+      </div>
+      <div class="new-mission" onclick="addNewMission()">+ New Mission</div>
+    </div>
+
+    <div class="fire-modes">
+      <div class="tabs">
+        <button class="tab" onclick="showWithoutObserver()">Without Forward Observer</button>
+        <button class="tab" onclick="showWithObserver()">With Forward Observer</button>
+        <button class="tab adjust-fire disabled-button" id="adjust-fire-btn" disabled>Adjust Fire ❌</button>
+      </div>
+
+      <div class="inputs-container" id="inputs-container"></div>
+
+      <div class="calculate-button">
+        <button onclick="calculate()">CALCULATE</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="firing-solution">
+    <div>Range: 00<br> Bearing: 00</div>
+    <div class="vertical-line"></div>
+    <div>Indirect Mils: 00<br>TOF: 00</div>
+    <div class="vertical-line"></div>
+    <div>Direct Mils: 00<br>TOF: 00</div>
+  </div>
+</div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
