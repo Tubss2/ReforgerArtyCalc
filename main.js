@@ -319,22 +319,31 @@
       let firingSolutionResult;
 
       // Check which tab is active and call corresponding function
-      if (document.querySelector('.tab.active').textContent.includes('Without Forward Observer')) {
+      const activeTab = document.querySelector('.tab.active');
+    
+      if (activeTab && activeTab.textContent.includes('Without Forward Observer')) {
+        // Proceed with the calculation for Without Forward Observer
         firingSolutionResult = main(saniLauncherEasting, saniLauncherNorthing, saniLauncherHeight, saniTargetEasting, saniTargetNorthing, saniTargetHeight);
         mission.firingSolutions = firingSolutionResult;
-      } else if (document.querySelector('.tab.active').textContent.includes('With Forward Observer')) {
+      } else if (activeTab && activeTab.textContent.includes('With Forward Observer')) {
+        // Proceed with the calculation for With Forward Observer
         const result = observerGridCalc(saniLauncherNorthing, saniLauncherEasting, saniLauncherHeight, saniObserverEasting, saniObserverNorthing, saniObserverBearing, saniObserverRangeToTgt, saniObserverAltitude);
         mission.firingSolutions = result;
         mission.TargetEasting = result.updatedEastingTarget;
         mission.TargetNorthing = result.updatedNorthingTarget;
-      } else if (document.querySelector('.tab.active').textContent.includes('Adjust Fire')) {
+      } else if (activeTab && activeTab.textContent.includes('Adjust Fire')) {
+        // Proceed with the calculation for Adjust Fire
         const result = observerGridCalc(saniLauncherNorthing, saniLauncherEasting, saniLauncherHeight, saniTargetEasting, saniTargetNorthing, saniAdjustFireBearing, saniAdjustFireRange, saniTargetHeight);
         mission.firingSolutions = result;
         mission.TargetEasting = result.updatedEastingTarget;
         mission.TargetNorthing = result.updatedNorthingTarget;
+      } else {
+        // Handle the case where no tab is active or tab is not recognized
+        console.error('No active tab or unrecognized tab selected.');
       }
 
       mission.HasPressedCalculate = true; // Set HasPressedCalculate to true
+
 
       displayFireMissions();
       updateAdjustFireButton(); // Call the function to update the button state
