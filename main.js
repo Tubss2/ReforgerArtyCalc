@@ -142,7 +142,7 @@
     `;
   }
 
-  window.showAdjustFire function showAdjustFire() {
+  window.showAdjustFire = function showAdjustFire() {
     const inputsContainer = document.getElementById('inputs-container');
     inputsContainer.innerHTML = `
       <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Fire Adjustment (0-360 degrees)">
