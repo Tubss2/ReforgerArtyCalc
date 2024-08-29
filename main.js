@@ -20,7 +20,7 @@
 
   let selectedMissionIndex = 0;
 
-  function addNewMission() {
+  window.addNewMission = function addNewMission() {
     const missionIndex = fireMissions.length;
     const newMission = {
       name: `Mission ${missionIndex + 1}`,
@@ -42,7 +42,7 @@
     displayFireMissions();
   }
 
-  function displayFireMissions() {
+  window.displayFireMissions = function displayFireMissions() {
     const missionsContainer = document.querySelector('.fire-missions');
     missionsContainer.innerHTML = ''; // Clear previous entries
 
@@ -81,7 +81,7 @@
     missionsContainer.appendChild(newMissionBtn);
   }
 
-  function renameMission(index) {
+  window.renameMission = function renameMission(index) {
     const missionElement = document.querySelectorAll('.mission-box input')[index];
     missionElement.readOnly = false;
     missionElement.focus();
@@ -92,7 +92,7 @@
     });
   }
 
-  function deleteMission(index) {
+  window.deleteMission = function deleteMission(index) {
     if (fireMissions.length > 1) {
       fireMissions.splice(index, 1);
       if (selectedMissionIndex >= index && selectedMissionIndex > 0) {
@@ -104,7 +104,7 @@
     }
   }
 
-  function selectMission(index) {
+  window.selectMission = function selectMission(index) {
     selectedMissionIndex = index;
     displayFireMissions();
     recallMissionData();
@@ -112,7 +112,7 @@
     updateAdjustFireButton(); // Update the Adjust Fire button state based on HasPressedCalculate
   }
 
-  function showWithoutObserver() {
+  window.showWithoutObserver = function showWithoutObserver() {
     const mission = fireMissions[selectedMissionIndex];
     const inputsContainer = document.getElementById('inputs-container');
     inputsContainer.innerHTML = `
@@ -125,7 +125,7 @@
     `;
   }
 
-  function showWithObserver() {
+  window.showWithObserver = function showWithObserver() {
     const mission = fireMissions[selectedMissionIndex];
     const inputsContainer = document.getElementById('inputs-container');
     inputsContainer.innerHTML = `
@@ -142,7 +142,7 @@
     `;
   }
 
-  function showAdjustFire() {
+  window.showAdjustFire function showAdjustFire() {
     const inputsContainer = document.getElementById('inputs-container');
     inputsContainer.innerHTML = `
       <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Fire Adjustment (0-360 degrees)">
@@ -152,7 +152,7 @@
     `;
   }
 
-  function updateAdjustFireButton() {
+  window.updateAdjustFireButton = function updateAdjustFireButton() {
     const mission = fireMissions[selectedMissionIndex];
     const adjustFireBtn = document.getElementById('adjust-fire-btn');
 
@@ -170,7 +170,7 @@
   }
 
 // Ensure the function is globally accessible
-  function start() {
+  window.start = function start() {
     const launcherEasting = document.getElementById('initial-launcher-easting');
     const launcherNorthing = document.getElementById('initial-launcher-northing');
     const launcherHeight = document.getElementById('initial-launcher-height');
@@ -212,7 +212,7 @@
     }
 };
 
-  function calculate() {
+  window.calculate = function calculate() {
     const mission = fireMissions[selectedMissionIndex];
 
     const targetEasting = document.getElementById('target-easting');
@@ -344,7 +344,7 @@
     }
   }
 
-  function displayFiringSolution() {
+  window.displayFiringSolution = function displayFiringSolution() {
     const mission = fireMissions[selectedMissionIndex];
     const solution = mission.firingSolutions;
     
