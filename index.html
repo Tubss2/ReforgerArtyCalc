@@ -50,11 +50,12 @@
     </div>
 
     <div class="fire-modes">
-      <div class="tabs">
-        <button class="tab" onclick="showWithoutObserver()">Without Forward Observer</button>
-        <button class="tab" onclick="showWithObserver()">With Forward Observer</button>
-        <button class="tab adjust-fire disabled-button" id="adjust-fire-btn" disabled>Adjust Fire</button>
-      </div>
+     <div class="tabs">
+      <button class="tab" onclick="setActiveTab(this); showWithoutObserver()">Without Forward Observer</button>
+      <button class="tab" onclick="setActiveTab(this); showWithObserver()">With Forward Observer</button>
+      <button class="tab adjust-fire disabled-button" id="adjust-fire-btn" onclick="setActiveTab(this);" disabled>Adjust Fire</button>
+    </div>
+  </div>
 
       <div class="inputs-container" id="inputs-container"></div>
 
