@@ -211,6 +211,13 @@
         document.getElementById('launcher-height').value = launcherHeight.value;
     }
 };
+   // Function to set the clicked tab as active and remove active from others
+  window.setActiveTab = function (clickedButton) {
+    // Remove 'active' class from all tabs
+      document.querySelectorAll('.tab').forEach(button => button.classList.remove('active'));
+    // Add 'active' class to the clicked tab
+      clickedButton.classList.add('active');
+};
 
   window.calculate = function calculate() {
     const mission = fireMissions[selectedMissionIndex];
