@@ -110,32 +110,49 @@
     }
 
     .fire-modes {
-      width: 88%;
-      padding: 20px;
+    width: 88%;
+    padding: 20px;
+    margin: auto; /* Center the container */
     }
 
     .fire-modes .tabs {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between; /* Adjust spacing evenly */
+    margin-bottom: 20px;
     }
-
+ 
     .fire-modes .tabs button {
-      flex: 1;
-      padding: 10px;
-      margin: 0 5px;
-      cursor: pointer;
-      border: none;
-      background-color: #4F5857;
-      color: #DFA25A;
+    flex: 1;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    border: none;
+    background-color: #4F5857;
+    color: #DFA25A;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for interaction feedback */
     }
 
+    /* Adjust specific styles for the active tab to make it distinct */
+    .fire-modes .tabs .tab.active {
+    background-color: #DFA25A;
+    color: #161C1A;
+    font-weight: bold;
+     }
+
+    /* Specific style for the Adjust Fire button */
     .fire-modes .tabs .adjust-fire {
-      background-color: #DFA25A;
-      color: #161C1A;
+    background-color: #DFA25A;
+    color: #161C1A;
+    font-weight: bold;
     }
 
-    .inputs-container input {
+    .inputs-container {
+    display: flex;
+    flex-direction: column; /* Align input fields vertically */
+    align-items: center; /* Center input fields horizontally */
+    }
+
+     .inputs-container input {
       margin: 5px 0;
       padding: 10px;
       width: 100%;
@@ -143,18 +160,20 @@
       background-color: #52635B;
       border: none;
       color: #161c1a;
-    }
+      border-radius: 4px; /* Add slight rounding for better appearance */
+     }
 
-    .error {
+     .error {
       color: #DFA25A;
       font-size: 12px;
-    }
+      margin-top: 5px; /* Space above error messages */
+     }
 
     .calculate-button {
       display: flex;
       justify-content: center;
       margin-top: 20px;
-    }
+     }
 
     .calculate-button button {
       padding: 15px 30px;
@@ -163,6 +182,12 @@
       color: #161C1A;
       border: none;
       cursor: pointer;
+      transition: background-color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    .calculate-button button:hover {
+      background-color: #4F5857; /* Darken on hover for feedback */
+
     }
 
     .firing-solution {
