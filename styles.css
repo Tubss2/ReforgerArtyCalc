@@ -109,19 +109,145 @@
       cursor: pointer;
     }
 
-    .fire-modes {
-    width: 88%;
-    padding: 20px;
-    margin: auto; /* Center the container */
-    }
+    /* General body and container styling */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    background-color: #161C1A;
+    color: #DFA25A;
+}
 
-    .fire-modes .tabs {
+/* Main container setup */
+.container {
     display: flex;
-    justify-content: space-between; /* Adjust spacing evenly */
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Launcher grid setup */
+.launcher-grid {
+    height: 10%;
+    background-color: #4F5857;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+}
+
+/* Launcher grid label styling */
+.launcher-grid label {
+    color: #DFA25A;
+}
+
+/* Input fields for launcher grid */
+.launcher-grid input, select {
+    margin: 0 10px;
+    padding: 5px;
+    background-color: #52635B;
+    border: 1px solid #161C1A;
+    color: #DFA25A;
+}
+
+/* Main content area */
+.main-content {
+    display: flex;
+    flex-grow: 1;
+}
+
+/* Fire missions section */
+.fire-missions {
+    width: 12%;
+    background-color: #4F5857;
+    padding: 10px;
+}
+
+/* Fire missions boxes */
+.fire-missions .mission-box {
+    padding: 10px;
+    background-color: #52635B;
+    color: #DFA25A;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Active fire mission */
+.fire-missions .mission-box.active {
+    background-color: #66BB83;
+    color: #161C1A;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+/* Fire mission input fields */
+.fire-missions .mission-box input {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    font-size: 14px;
+    color: inherit;
+    cursor: pointer;
+}
+
+/* Edit and delete buttons for fire missions */
+.fire-missions .edit-btn, .fire-missions .delete-btn {
+    position: absolute;
+    right: 5px;
+    display: none;
+    background-color: transparent;
+    border: none;
+    color: #DFA25A;
+    cursor: pointer;
+}
+
+.fire-missions .edit-btn {
+    right: 35px;
+}
+
+.fire-missions .delete-btn {
+    right: 5px;
+}
+
+/* Hover effects for fire mission edit and delete buttons */
+.fire-missions .mission-box:hover .edit-btn, 
+.fire-missions .mission-box:hover .delete-btn {
+    display: inline-block;
+}
+
+/* New mission button */
+.fire-missions .new-mission {
+    background-color: #66BB83;
+    color: #161C1A;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* Fire modes and tabs setup */
+.fire-modes {
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    top: 15%; /* Position near the top but below the launcher grid */
+    left: 0;
+}
+
+/* Fire modes tab buttons */
+.fire-modes .tabs {
+    display: flex;
+    justify-content: space-around;
     margin-bottom: 20px;
-    }
- 
-    .fire-modes .tabs button {
+}
+
+/* Styling for tab buttons */
+.fire-modes .tabs button {
     flex: 1;
     padding: 10px;
     margin: 0 5px;
@@ -129,66 +255,81 @@
     border: none;
     background-color: #4F5857;
     color: #DFA25A;
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for interaction feedback */
-    }
+}
 
-    /* Adjust specific styles for the active tab to make it distinct */
-    .fire-modes .tabs .tab.active {
+/* Adjust fire tab specific styling */
+.fire-modes .tabs .adjust-fire {
     background-color: #DFA25A;
     color: #161C1A;
-    font-weight: bold;
-     }
+}
 
-    /* Specific style for the Adjust Fire button */
-    .fire-modes .tabs .adjust-fire {
-    background-color: #DFA25A;
-    color: #161C1A;
-    font-weight: bold;
-    }
+/* Input container positioning */
+.inputs-container {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+}
 
-    .inputs-container {
+/* Input fields styling */
+.inputs-container input {
+    margin: 5px 0;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    background-color: #52635B;
+    border: none;
+    color: #161c1a;
+}
+
+/* Error message styling */
+.error {
+    color: #DFA25A;
+    font-size: 12px;
+}
+
+/* Calculate button positioning and styling */
+.calculate-button {
+    position: absolute;
+    bottom: 25%; /* Position 25% from the bottom */
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    flex-direction: column; /* Align input fields vertically */
-    align-items: center; /* Center input fields horizontally */
-    }
+    justify-content: center;
+}
 
-     .inputs-container input {
-      margin: 5px 0;
-      padding: 10px;
-      width: 100%;
-      max-width: 300px;
-      background-color: #52635B;
-      border: none;
-      color: #161c1a;
-      border-radius: 4px; /* Add slight rounding for better appearance */
-     }
+/* Calculate button styling */
+.calculate-button button {
+    padding: 20px 40px; /* Make button larger */
+    font-size: 18px;
+    background-color: #66BB83;
+    color: #161C1A;
+    border: none;
+    cursor: pointer;
+}
 
-     .error {
-      color: #DFA25A;
-      font-size: 12px;
-      margin-top: 5px; /* Space above error messages */
-     }
+/* Firing solution section */
+.firing-solution {
+    height: 10%;
+    background-color: #4F5857;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: #66BB83;
+}
 
-    .calculate-button {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-     }
+/* Firing solution div */
+.firing-solution div {
+    text-align: center;
+}
 
-    .calculate-button button {
-      padding: 15px 30px;
-      font-size: 18px;
-      background-color: #66BB83;
-      color: #161C1A;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s; /* Smooth transition for hover effect */
-    }
+/* Firing solution vertical line */
+.firing-solution div.vertical-line {
+    border-left: 2px solid #66BB83;
+    height: 100%;
+}
 
-    .calculate-button button:hover {
-      background-color: #4F5857; /* Darken on hover for feedback */
-
-    }
 
     .firing-solution {
       height: 10%;
