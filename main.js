@@ -416,7 +416,7 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
     saniLauncherNorthing,
     saniLauncherEasting,
     saniLauncherHeight,
-    saniTargetEasting,
+    targetEasting,
     saniTargetNorthing,
     saniAdjustFireBearing,
     saniAdjustFireRange,
