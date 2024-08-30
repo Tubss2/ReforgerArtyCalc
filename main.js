@@ -458,7 +458,7 @@ window.debugPrintSaniVariables = function debugPrintSaniVariables(
   saniLauncherEasting,
   saniLauncherHeight,
   saniTargetEasting,
-  saniTargetNorthing,
+  targetNorthing,
   saniAdjustFireBearing,
   saniAdjustFireRange,
   saniTargetHeight
