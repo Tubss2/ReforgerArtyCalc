@@ -20,6 +20,10 @@
 
   let selectedMissionIndex = 0;
 
+  window.onload = function () {
+    setActiveTab('Without Forward Observer'); // Set default active tab on page load
+  };
+
   window.addNewMission = function addNewMission() {
     const missionIndex = fireMissions.length;
     const newMission = {
@@ -112,9 +116,22 @@
     updateAdjustFireButton(); // Update the Adjust Fire button state based on HasPressedCalculate
   }
 
-  window.showWithoutObserver = function showWithoutObserver() {
-    const mission = fireMissions[selectedMissionIndex];
-    const inputsContainer = document.getElementById('inputs-container');
+window.setActiveTab = function setActiveTab(tabName) {
+  // Remove 'active' class from all tabs and add 'active' class to the clicked tab based on tabName
+  document.querySelectorAll('.tab').forEach(tab => {
+    if (tab.textContent.includes(tabName)) {
+      tab.classList.add('active');
+    } else {
+      tab.classList.remove('active');
+    }
+  });
+};
+
+window.showWithoutObserver = function showWithoutObserver() {
+  setActiveTab('Without Forward Observer');
+  const mission = fireMissions[selectedMissionIndex];
+  const inputsContainer = document.getElementById('inputs-container');
+  if (inputsContainer) {
     inputsContainer.innerHTML = `
       <input type="text" id="target-easting" placeholder="Target Easting (5 digits)" value="${mission.TargetEasting || ''}">
       <div class="error" id="easting-error"></div>
@@ -124,10 +141,13 @@
       <div class="error" id="target-height-error"></div>
     `;
   }
+};
 
-  window.showWithObserver = function showWithObserver() {
-    const mission = fireMissions[selectedMissionIndex];
-    const inputsContainer = document.getElementById('inputs-container');
+window.showWithObserver = function showWithObserver() {
+  setActiveTab('With Forward Observer');
+  const mission = fireMissions[selectedMissionIndex];
+  const inputsContainer = document.getElementById('inputs-container');
+  if (inputsContainer) {
     inputsContainer.innerHTML = `
       <input type="text" id="observer-easting" placeholder="Observer Easting (5 digits)" value="${mission.ObserverEasting || ''}">
       <div class="error" id="observer-easting-error"></div>
@@ -141,9 +161,12 @@
       <div class="error" id="observer-altitude-error"></div>
     `;
   }
+};
 
-  window.showAdjustFire = function showAdjustFire() {
-    const inputsContainer = document.getElementById('inputs-container');
+window.showAdjustFire = function showAdjustFire() {
+  setActiveTab('Adjust Fire');
+  const inputsContainer = document.getElementById('inputs-container');
+  if (inputsContainer) {
     inputsContainer.innerHTML = `
       <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Fire Adjustment (0-360 degrees)">
       <div class="error" id="adjustment-bearing-error"></div>
@@ -151,16 +174,18 @@
       <div class="error" id="adjustment-range-error"></div>
     `;
   }
+};
 
-  window.updateAdjustFireButton = function updateAdjustFireButton() {
-    const mission = fireMissions[selectedMissionIndex];
-    const adjustFireBtn = document.getElementById('adjust-fire-btn');
+window.updateAdjustFireButton = function updateAdjustFireButton() {
+  const mission = fireMissions[selectedMissionIndex];
+  const adjustFireBtn = document.getElementById('adjust-fire-btn');
 
+  if (adjustFireBtn) {
     if (mission.HasPressedCalculate) {
       adjustFireBtn.disabled = false;
       adjustFireBtn.classList.remove('disabled-button');
       adjustFireBtn.innerHTML = 'Adjust Fire';
-      adjustFireBtn.onclick = showAdjustFire;
+      adjustFireBtn.onclick = showAdjustFire; // Use direct assignment for simplicity
     } else {
       adjustFireBtn.disabled = true;
       adjustFireBtn.classList.add('disabled-button');
@@ -168,6 +193,8 @@
       adjustFireBtn.onclick = () => alert('You must calculate a solution first to adjust fire');
     }
   }
+};
+
 
 // Ensure the function is globally accessible
   window.start = function start() {
