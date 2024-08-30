@@ -404,6 +404,7 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
       saniObserverRangeToTgt, 
       saniObserverAltitude
     );
+       console.log('Firing Solution Result (With Forward Observer):', firingSolutionResult);
     mission.firingSolutions = firingSolutionResult;
     mission.TargetEasting = firingSolutionResult.updatedEastingTarget;
     mission.TargetNorthing = firingSolutionResult.updatedNorthingTarget;
