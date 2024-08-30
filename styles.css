@@ -114,38 +114,30 @@
       padding: 20px;
     }
 
-    .fire-modes {
+      .fire-modes {
+    display: flex;
+    justify-content: flex-start; /* Aligns children to the start of the flex container */
+    align-items: flex-start; /* Aligns children to the top */
+    padding: 20px;
+    height: 100%;
+    flex-wrap: wrap; /* Allows wrapping of children */
+  }
+
+      .tabs {
+      flex-basis: 100%; /* Tabs take full width */
       display: flex;
-      justify-content: flex-start; /* Aligns children to the start of the flex container */
-      align-items: center; /* Vertically centers the items */
-      padding: 20px;
-      height: 100%;
-}
-
-    .fire-modes .tabs button {
-      flex: 1;
-      padding: 10px;
-      margin: 0 5px;
-      cursor: pointer;
-      border: none;
-      background-color: #4F5857;
-      color: #DFA25A;
-    }
-
-    .fire-modes .tabs .adjust-fire {
-      background-color: #DFA25A;
-      color: #161C1A;
+      justify-content: space-around;
+      margin-bottom: 20px;
     }
 
     .inputs-container {
-      flex-basis: 20%; /* Adjusts the width of the inputs container */
+      flex-basis: 30%; /* Adjusts the width of the inputs container */
       display: flex;
       flex-direction: column; /* Stacks inputs vertically */
       align-items: flex-start; /* Align inputs to the left */
       padding: 10px;
-      margin-left: 10px; /* Creates some spacing from the left */
-      background-color: #4F5857; /* Ensure the inputs are visible with a background */
-   }
+      background-color: #4F5857; /* Background color to match the design */
+      margin-top: 20px; /* Creates some spacing from the tabs */
 
     .error {
       color: #DFA25A;
