@@ -114,11 +114,13 @@
       padding: 20px;
     }
 
-    .fire-modes .tabs {
+    .fire-modes {
       display: flex;
-      justify-content: space-around;
-      margin-bottom: 20px;
-    }
+      justify-content: flex-start; /* Aligns children to the start of the flex container */
+      align-items: center; /* Vertically centers the items */
+      padding: 20px;
+      height: 100%;
+}
 
     .fire-modes .tabs button {
       flex: 1;
