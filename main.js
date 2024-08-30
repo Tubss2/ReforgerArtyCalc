@@ -453,6 +453,27 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
     }
   }
 
+window.debugPrintSaniVariables = function debugPrintSaniVariables(
+  saniLauncherNorthing,
+  saniLauncherEasting,
+  saniLauncherHeight,
+  saniTargetEasting,
+  saniTargetNorthing,
+  saniAdjustFireBearing,
+  saniAdjustFireRange,
+  saniTargetHeight
+) {
+  console.log("Debugging Sanitized Variables Before Sending to observerGridCalc:");
+  console.log("saniLauncherNorthing:", saniLauncherNorthing);
+  console.log("saniLauncherEasting:", saniLauncherEasting);
+  console.log("saniLauncherHeight:", saniLauncherHeight);
+  console.log("saniTargetEasting:", saniTargetEasting);
+  console.log("saniTargetNorthing:", saniTargetNorthing);
+  console.log("saniAdjustFireBearing:", saniAdjustFireBearing);
+  console.log("saniAdjustFireRange:", saniAdjustFireRange);
+  console.log("saniTargetHeight:", saniTargetHeight);
+}
+
   window.displayFiringSolution = function displayFiringSolution() {
     const mission = fireMissions[selectedMissionIndex];
     const solution = mission.firingSolutions;
