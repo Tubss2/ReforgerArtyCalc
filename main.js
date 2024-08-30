@@ -468,7 +468,7 @@ window.debugPrintSaniVariables = function debugPrintSaniVariables(
   console.log("saniLauncherEasting:", saniLauncherEasting);
   console.log("saniLauncherHeight:", saniLauncherHeight);
   console.log("saniTargetEasting:", saniTargetEasting);
-  console.log("saniTargetNorthing:", saniTargetNorthing);
+  console.log("targetNorthing:", targetNorthing);
   console.log("saniAdjustFireBearing:", saniAdjustFireBearing);
   console.log("saniAdjustFireRange:", saniAdjustFireRange);
   console.log("saniTargetHeight:", saniTargetHeight);
