@@ -394,7 +394,7 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
       mission.firingSolutions = firingSolutionResult;
   
    } else if (activeTab && activeTab.textContent.includes('With Forward Observer')) {
-    const result = observerGridCalc(
+    const firingSolutionResult = observerGridCalc(
       saniLauncherNorthing, 
       saniLauncherEasting, 
       saniLauncherHeight, 
@@ -405,12 +405,12 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
       saniObserverAltitude
     );
     mission.firingSolutions = firingSolutionResult;
-    mission.TargetEasting = result.updatedEastingTarget;
-    mission.TargetNorthing = result.updatedNorthingTarget;
+    mission.TargetEasting = firingSolutionResult.updatedEastingTarget;
+    mission.TargetNorthing = firingSolutionResult.updatedNorthingTarget;
   
   } else if (activeTab && activeTab.textContent.includes('Adjust Fire')) {
 
-    const result = observerGridCalc(
+    const firingSolutionResult = observerGridCalc(
       saniLauncherNorthing, 
       saniLauncherEasting, 
     saniLauncherHeight, 
@@ -422,8 +422,8 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
     );
 
     mission.firingSolutions = firingSolutionResult;
-    mission.TargetEasting = result.updatedEastingTarget;
-    mission.TargetNorthing = result.updatedNorthingTarget;
+    mission.TargetEasting = firingSolutionResult.updatedEastingTarget;
+    mission.TargetNorthing = firingSolutionResult.updatedNorthingTarget;
 
   } else {
     console.log("No active tab found or it doesn't match any known conditions.");
