@@ -378,20 +378,70 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
       let firingSolutionResult;
 
       // Check which tab is active and call corresponding function
-      if (document.querySelector('.tab.active').textContent.includes('Without Forward Observer')) {
-        firingSolutionResult = main(saniLauncherEasting, saniLauncherNorthing, saniLauncherHeight, saniTargetEasting, saniTargetNorthing, saniTargetHeight);
-        mission.firingSolutions = firingSolutionResult;
-      } else if (document.querySelector('.tab.active').textContent.includes('With Forward Observer')) {
-        const result = observerGridCalc(saniLauncherNorthing, saniLauncherEasting, saniLauncherHeight, saniObserverEasting, saniObserverNorthing, saniObserverBearing, saniObserverRangeToTgt, saniObserverAltitude);
-        mission.firingSolutions = result;
-        mission.TargetEasting = result.updatedEastingTarget;
-        mission.TargetNorthing = result.updatedNorthingTarget;
-      } else if (document.querySelector('.tab.active').textContent.includes('Adjust Fire')) {
-        const result = observerGridCalc(saniLauncherNorthing, saniLauncherEasting, saniLauncherHeight, saniTargetEasting, saniTargetNorthing, saniAdjustFireBearing, saniAdjustFireRange, saniTargetHeight);
-        mission.firingSolutions = result;
-        mission.TargetEasting = result.updatedEastingTarget;
-        mission.TargetNorthing = result.updatedNorthingTarget;
-      }
+      const activeTab = document.querySelector('.tab.active');
+
+     if (activeTab && activeTab.textContent.includes('Without Forward Observer')) {
+       console.log("Active tab is 'Without Forward Observer'. Calculating firing solution using main().");
+
+    firingSolutionResult = main(
+      saniLauncherEasting, 
+      saniLauncherNorthing, 
+      saniLauncherHeight, 
+      saniTargetEasting, 
+      saniTargetNorthing, 
+      saniTargetHeight
+    );
+  
+      console.log('Firing Solution Result (Without Forward Observer):', firingSolutionResult);
+      mission.firingSolutions = firingSolutionResult;
+  
+   } else if (activeTab && activeTab.textContent.includes('With Forward Observer')) {
+  console.log("Active tab is 'With Forward Observer'. Calculating firing solution using observerGridCalc().");
+
+    const result = observerGridCalc(
+      saniLauncherNorthing, 
+      saniLauncherEasting, 
+      saniLauncherHeight, 
+      saniObserverEasting, 
+      saniObserverNorthing, 
+      saniObserverBearing, 
+      saniObserverRangeToTgt, 
+      saniObserverAltitude
+    );
+
+    console.log('Firing Solution Result (With Forward Observer):', result);
+    mission.firingSolutions = result;
+    mission.TargetEasting = result.updatedEastingTarget;
+    mission.TargetNorthing = result.updatedNorthingTarget;
+
+    console.log('Updated Target Easting:', mission.TargetEasting);
+    console.log('Updated Target Northing:', mission.TargetNorthing);
+  
+  } else if (activeTab && activeTab.textContent.includes('Adjust Fire')) {
+    console.log("Active tab is 'Adjust Fire'. Calculating adjusted fire solution using observerGridCalc().");
+
+    const result = observerGridCalc(
+      saniLauncherNorthing, 
+      saniLauncherEasting, 
+    saniLauncherHeight, 
+      saniTargetEasting, 
+      saniTargetNorthing, 
+      saniAdjustFireBearing, 
+      saniAdjustFireRange, 
+      saniTargetHeight
+    );
+
+    console.log('Firing Solution Result (Adjust Fire):', result);
+    mission.firingSolutions = result;
+    mission.TargetEasting = result.updatedEastingTarget;
+    mission.TargetNorthing = result.updatedNorthingTarget;
+
+    console.log('Updated Target Easting (Adjust Fire):', mission.TargetEasting);
+    console.log('Updated Target Northing (Adjust Fire):', mission.TargetNorthing);
+  } else {
+    console.log("No active tab found or it doesn't match any known conditions.");
+  }
+
 
       mission.HasPressedCalculate = true; // Set HasPressedCalculate to true
 
