@@ -131,15 +131,28 @@ function observerGridCalc(northingLauncher, eastingLauncher, heightLauncher,
     const northingTarget = northingObserver + observerRangeToTarget * Math.cos(bearingRad);
 
     // Call main to finalize the calculation
-    const result = main(eastingLauncher, northingLauncher, heightLauncher, eastingTarget, northingTarget, heightTarget);
+    const {
+        horizontalDistance,
+        bearingDeg,
+        milsIndirect,
+        tofIndirect,
+        milsDirect,
+        tofDirect
+    } = main(eastingLauncher, northingLauncher, heightLauncher, eastingTarget, northingTarget, heightTarget);
 
-    // Return an object including the main result, eastingTarget, and northingTarget
+    // Return an object including the main result expanded out and the updated target coordinates
     return {
-        result,               // The output from the main function
-        updatedEastingTarget: eastingTarget, // Calculated eastingTarget
+        horizontalDistance: horizontalDistance,
+        bearingDeg: bearingDeg.toFixed(2),
+        milsIndirect: milsIndirect,
+        tofIndirect: tofIndirect.toFixed(2),
+        milsDirect: milsDirect,
+        tofDirect: tofDirect.toFixed(2),
+        updatedEastingTarget: eastingTarget,  // Calculated eastingTarget
         updatedNorthingTarget: northingTarget // Calculated northingTarget
     };
 }
+
 
 // Export the main and observerGridCalc functions for use in other modules
 export { main, observerGridCalc };
