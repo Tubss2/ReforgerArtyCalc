@@ -143,11 +143,11 @@ function observerGridCalc(northingLauncher, eastingLauncher, heightLauncher,
     // Return an object including the main result expanded out and the updated target coordinates
     return {
         horizontalDistance: horizontalDistance,
-        bearingDeg: bearingDeg.toFixed(2),
+        bearingDeg: bearingDeg
         milsIndirect: milsIndirect,
-        tofIndirect: tofIndirect.toFixed(2),
+        tofIndirect: tofIndirect,
         milsDirect: milsDirect,
-        tofDirect: tofDirect.toFixed(2),
+        tofDirect: tofDirect,
         updatedEastingTarget: eastingTarget,  // Calculated eastingTarget
         updatedNorthingTarget: northingTarget // Calculated northingTarget
     };
