@@ -393,39 +393,28 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
       console.log('Firing Solution Result (Without Forward Observer):', firingSolutionResult);
       mission.firingSolutions = firingSolutionResult;
   
-   } else if (activeTab && activeTab.textContent.includes('Adjust Fire')) {
-  debugPrintSaniVariables(
-    saniLauncherNorthing,
-    saniLauncherEasting,
-    saniLauncherHeight,
-    saniTargetEasting,
-    saniTargetNorthing,
-    saniAdjustFireBearing,
-    saniAdjustFireRange,
-    saniTargetHeight
-  );
-  const firingSolutionResult = observerGridCalc(
-    saniLauncherNorthing, 
-    saniLauncherEasting, 
-    saniLauncherHeight, 
-    saniTargetEasting, 
-    saniTargetNorthing, 
-    saniAdjustFireBearing, 
-    saniAdjustFireRange, 
-    saniTargetHeight
-  );
-
-  mission.firingSolutions = firingSolutionResult;
-  mission.TargetEasting = firingSolutionResult.updatedEastingTarget;
-  mission.TargetNorthing = firingSolutionResult.updatedNorthingTarget;
-}
+   } else if (activeTab && activeTab.textContent.includes('With Forward Observer')) {
+    const firingSolutionResult = observerGridCalc(
+      saniLauncherNorthing, 
+      saniLauncherEasting, 
+      saniLauncherHeight, 
+      saniObserverEasting, 
+      saniObserverNorthing, 
+      saniObserverBearing, 
+      saniObserverRangeToTgt, 
+      saniObserverAltitude
+    );
+       console.log('Firing Solution Result (With Forward Observer):', firingSolutionResult);
+    mission.firingSolutions = firingSolutionResult;
+    mission.TargetEasting = firingSolutionResult.updatedEastingTarget;
+    mission.TargetNorthing = firingSolutionResult.updatedNorthingTarget;
   
   } else if (activeTab && activeTab.textContent.includes('Adjust Fire')) {
 
     const firingSolutionResult = observerGridCalc(
       saniLauncherNorthing, 
       saniLauncherEasting, 
-      saniLauncherHeight, 
+    saniLauncherHeight, 
       saniTargetEasting, 
       saniTargetNorthing, 
       saniAdjustFireBearing, 
@@ -451,27 +440,6 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
       displayFiringSolution();
     }
   }
-  
-window.debugPrintSaniVariables = function debugPrintSaniVariables(
-  saniLauncherNorthing,
-  saniLauncherEasting,
-  saniLauncherHeight,
-  saniTargetEasting,
-  saniTargetNorthing,
-  saniAdjustFireBearing,
-  saniAdjustFireRange,
-  saniTargetHeight
-) {
-  console.log("Debugging Sanitized Variables Before Sending to observerGridCalc:");
-  console.log("saniLauncherNorthing:", saniLauncherNorthing);
-  console.log("saniLauncherEasting:", saniLauncherEasting);
-  console.log("saniLauncherHeight:", saniLauncherHeight);
-  console.log("saniTargetEasting:", saniTargetEasting);
-  console.log("saniTargetNorthing:", saniTargetNorthing);
-  console.log("saniAdjustFireBearing:", saniAdjustFireBearing);
-  console.log("saniAdjustFireRange:", saniAdjustFireRange);
-  console.log("saniTargetHeight:", saniTargetHeight);
-}
 
   window.displayFiringSolution = function displayFiringSolution() {
     const mission = fireMissions[selectedMissionIndex];
