@@ -135,15 +135,15 @@
       color: #161C1A;
     }
 
-    .inputs-container input {
-      margin: 5px 0;
+    .inputs-container {
+      flex-basis: 20%; /* Adjusts the width of the inputs container */
+      display: flex;
+      flex-direction: column; /* Stacks inputs vertically */
+      align-items: flex-start; /* Align inputs to the left */
       padding: 10px;
-      width: 100%;
-      max-width: 300px;
-      background-color: #52635B;
-      border: none;
-      color: #161c1a;
-    }
+      margin-left: 10px; /* Creates some spacing from the left */
+      background-color: #4F5857; /* Ensure the inputs are visible with a background */
+   }
 
     .error {
       color: #DFA25A;
