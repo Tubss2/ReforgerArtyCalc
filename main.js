@@ -411,20 +411,32 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
   
   } else if (activeTab && activeTab.textContent.includes('Adjust Fire')) {
 
-    const firingSolutionResult = observerGridCalc(
-      saniLauncherNorthing, 
-      saniLauncherEasting, 
-    saniLauncherHeight, 
-      saniTargetEasting, 
-      saniTargetNorthing, 
-      saniAdjustFireBearing, 
-      saniAdjustFireRange, 
-      saniTargetHeight
-    );
+  // Debugging: Print all sanitized variables before sending to observerGridCalc
+  debugPrintSaniVariables(
+    saniLauncherNorthing,
+    saniLauncherEasting,
+    saniLauncherHeight,
+    saniTargetEasting,
+    saniTargetNorthing,
+    saniAdjustFireBearing,
+    saniAdjustFireRange,
+    saniTargetHeight
+  );
 
-    mission.firingSolutions = firingSolutionResult;
-    mission.TargetEasting = firingSolutionResult.updatedEastingTarget;
-    mission.TargetNorthing = firingSolutionResult.updatedNorthingTarget;
+  const firingSolutionResult = observerGridCalc(
+    saniLauncherNorthing, 
+    saniLauncherEasting, 
+    saniLauncherHeight, 
+    saniTargetEasting, 
+    saniTargetNorthing, 
+    saniAdjustFireBearing, 
+    saniAdjustFireRange, 
+    saniTargetHeight
+  );
+
+  mission.firingSolutions = firingSolutionResult;
+  mission.TargetEasting = firingSolutionResult.updatedEastingTarget;
+  mission.TargetNorthing = firingSolutionResult.updatedNorthingTarget;
 
   } else {
     console.log("No active tab found or it doesn't match any known conditions.");
