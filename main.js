@@ -46,6 +46,31 @@
     displayFireMissions();
   }
 
+  window.recallMissionData = function recallMissionData() {
+   const mission = fireMissions[selectedMissionIndex];
+
+  // Create an array of input field IDs and corresponding mission properties
+   const fields = [
+     { id: 'target-easting', value: mission.TargetEasting },
+     { id: 'target-northing', value: mission.TargetNorthing },
+     { id: 'target-height', value: mission.TargetHeight },
+     { id: 'observer-easting', value: mission.ObserverEasting },
+     { id: 'observer-northing', value: mission.ObserverNorthing },
+     { id: 'observer-bearing', value: mission.ObserverBearing },
+     { id: 'observer-range', value: mission.ObserverRangeToTgt },
+     { id: 'observer-altitude', value: mission.ObserverAltitude }
+   ];
+
+  // Iterate over each field and update its value if the element exists
+     fields.forEach(field => {
+     const inputElement = document.getElementById(field.id);
+     if (inputElement) {
+      inputElement.value = field.value || ''; // Use empty string if value is null or undefined
+     }
+    });
+  }
+
+
   window.displayFireMissions = function displayFireMissions() {
     const missionsContainer = document.querySelector('.fire-missions');
     missionsContainer.innerHTML = ''; // Clear previous entries
@@ -324,9 +349,6 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
 
     // If valid, update mission data and enable Adjust Fire button
     if (valid) {
-      // Store values in the selected fire mission
-      if (adjustFireBearing) mission.adjustFireBearing = adjustFireBearing.value;
-      if (adjustFireRange) mission.adjustFireRange = adjustFireRange.value;
 
       // Sanitize data
       const saniLauncherEasting = Number(document.getElementById('launcher-easting').value);
