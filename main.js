@@ -349,6 +349,16 @@ window.updateAdjustFireButton = function updateAdjustFireButton() {
 
     // If valid, update mission data and enable Adjust Fire button
     if (valid) {
+      mission.TargetEasting = targetEasting ? targetEasting.value : null;
+      mission.TargetNorthing = targetNorthing ? targetNorthing.value : null;
+      mission.TargetHeight = targetHeight ? targetHeight.value : null;
+      mission.ObserverEasting = observerEasting ? observerEasting.value : null;
+      mission.ObserverNorthing = observerNorthing ? observerNorthing.value : null;
+      mission.ObserverBearing = observerBearing ? observerBearing.value : null;
+      mission.ObserverRangeToTgt = observerRange ? observerRange.value : null;
+      mission.ObserverAltitude = observerAltitude ? observerAltitude.value : null;
+      mission.adjustFireBearing = adjustFireBearing ? adjustFireBearing.value : null;
+      mission.adjustFireRange = adjustFireRange ? adjustFireRange.value : null;
 
       // Sanitize data
       const saniLauncherEasting = Number(document.getElementById('launcher-easting').value);
