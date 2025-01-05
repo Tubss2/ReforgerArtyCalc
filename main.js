@@ -323,47 +323,88 @@
       const saniAdjustFireBearing = Number(adjustFireBearing ? adjustFireBearing.value : null);
       const saniAdjustFireRange = Number(adjustFireRange ? adjustFireRange.value : null);
 
-      let firingSolutionResult;
+      window.calculate = function calculate() {
+    const mission = fireMissions[selectedMissionIndex];
 
-      // Check which tab is active and call corresponding function
-      const activeTab = document.querySelector('.tab.active');
-    
-      if (activeTab && activeTab.textContent.includes('Without Forward Observer')) {
-        // Proceed with the calculation for Without Forward Observer
-        firingSolutionResult = main(saniLauncherEasting, saniLauncherNorthing, saniLauncherHeight, saniTargetEasting, saniTargetNorthing, saniTargetHeight);
-        mission.firingSolutions = firingSolutionResult;
-      } else if (activeTab && activeTab.textContent.includes('With Forward Observer')) {
-        // Proceed with the calculation for With Forward Observer
-        const result = observerGridCalc(saniLauncherNorthing, saniLauncherEasting, saniLauncherHeight, saniObserverEasting, saniObserverNorthing, saniObserverBearing, saniObserverRangeToTgt, saniObserverAltitude);
-        mission.firingSolutions = result;
+    // Perform input validation and calculations (existing logic)...
+
+    let firingSolutionResult;
+
+    // Check which tab is active and calculate the firing solution
+    const activeTab = document.querySelector('.tab.active');
+    if (activeTab && activeTab.textContent.includes('Without Forward Observer')) {
+        firingSolutionResult = main(
+            saniLauncherEasting, 
+            saniLauncherNorthing, 
+            saniLauncherHeight, 
+            saniTargetEasting, 
+            saniTargetNorthing, 
+            saniTargetHeight
+        );
+    } else if (activeTab && activeTab.textContent.includes('With Forward Observer')) {
+        const result = observerGridCalc(
+            saniLauncherNorthing, 
+            saniLauncherEasting, 
+            saniLauncherHeight, 
+            saniObserverEasting, 
+            saniObserverNorthing, 
+            saniObserverBearing, 
+            saniObserverRangeToTgt, 
+            saniObserverAltitude
+        );
+        firingSolutionResult = result.result;
         mission.TargetEasting = result.updatedEastingTarget;
         mission.TargetNorthing = result.updatedNorthingTarget;
-      } else if (activeTab && activeTab.textContent.includes('Adjust Fire')) {
-        // Proceed with the calculation for Adjust Fire
-        const result = observerGridCalc(saniLauncherNorthing, saniLauncherEasting, saniLauncherHeight, saniTargetEasting, saniTargetNorthing, saniAdjustFireBearing, saniAdjustFireRange, saniTargetHeight);
-        mission.firingSolutions = result;
-        mission.TargetEasting = result.updatedEastingTarget;
-        mission.TargetNorthing = result.updatedNorthingTarget;
-      } else {
-        // Handle the case where no tab is active or tab is not recognized
-        console.error('No active tab or unrecognized tab selected.');
-      }
-
-      mission.HasPressedCalculate = true; // Set HasPressedCalculate to true
-
-
-      displayFireMissions();
-      updateAdjustFireButton(); // Call the function to update the button state
-
-      // Display firing solution
-      displayFiringSolution();
     }
-  }
+
+    // Append the new solution to the mission's firingSolutions array
+    if (firingSolutionResult) {
+        mission.firingSolutions.push(firingSolutionResult);
+        mission.HasPressedCalculate = true;
+    }
+
+    // Update the UI
+    displayFireMissions();
+    updateAdjustFireButton();
+    displayFiringSolution();
+    displayPreviousSolutions(); // New function to display previous solutions
+};
+window.displayPreviousSolutions = function displayPreviousSolutions() {
+    const mission = fireMissions[selectedMissionIndex];
+    const solutionsContainer = document.getElementById('solutions-container');
+
+    solutionsContainer.innerHTML = ''; // Clear previous entries
+
+    mission.firingSolutions.forEach((solution, index) => {
+        const solutionDiv = document.createElement('div');
+        solutionDiv.classList.add('solution-box');
+        solutionDiv.innerHTML = `
+            <p><strong>Solution ${index + 1}:</strong></p>
+            <p>Range: ${solution.horizontalDistance || '00'} m</p>
+            <p>Bearing: ${solution.bearingDeg || '00.00'}°</p>
+            <p>Indirect Mils: ${solution.milsIndirect || '00'}</p>
+            <p>TOF (Indirect): ${solution.tofIndirect || '00.00'} s</p>
+            <p>Direct Mils: ${solution.milsDirect || '00'}</p>
+            <p>TOF (Direct): ${solution.tofDirect || '00.00'} s</p>
+        `;
+        solutionsContainer.appendChild(solutionDiv);
+    });
+};
+
 
   window.displayFiringSolution = function displayFiringSolution() {
     const mission = fireMissions[selectedMissionIndex];
-    const solution = mission.firingSolutions;
-    
+
+    // Check if there are any firing solutions available
+    if (!mission.firingSolutions.length) {
+        document.querySelector('.firing-solution').innerHTML = "<div>No solutions available.</div>";
+        return;
+    }
+
+    // Get the latest firing solution
+    const solution = mission.firingSolutions[mission.firingSolutions.length - 1];
+
+    // Display the latest firing solution
     document.querySelector('.firing-solution').innerHTML = `
       <div>Range: ${solution.horizontalDistance || '00'}<br> Bearing: ${solution.bearingDeg || '00.00'}</div>
       <div class="vertical-line"></div>
@@ -371,6 +412,6 @@
       <div class="vertical-line"></div>
       <div>Direct Mils: ${solution.milsDirect || '00'}<br>TOF: ${solution.tofDirect || '00.00'}</div>
     `;
-  }
+};
 
   displayFireMissions();
