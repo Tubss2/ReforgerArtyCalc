@@ -229,6 +229,29 @@
       font-size: 14px;
       color: #DFA25A;
     }
+    .solutions-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 20%;
+      height: 33%;
+      background-color: #4F5857;
+      color: #DFA25A;
+      overflow-y: auto;
+      padding: 10px;
+      border: 1px solid #161C1A;
+      border-radius: 5px;
+    }
+
+    .solution-box {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #52635B;
+      border: 1px solid #161C1A;
+      border-radius: 5px;
+    }
+
+     
   </style>
 </head>
 <body>
