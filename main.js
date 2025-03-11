@@ -146,9 +146,9 @@ window.showWithoutObserver = function () {
   setActiveTab('Without Forward Observer');
   const mission = fireMissions[selectedMissionIndex];
   document.getElementById('inputs-container').innerHTML = `
-    <input type="text" id="target-easting" placeholder="Target Easting" value="${mission.TargetEasting || ''}">
+    <input type="text" id="target-easting" placeholder="Target Easting (5 digits)" value="${mission.TargetEasting || ''}">
     <div class="error" id="easting-error"></div>
-    <input type="text" id="target-northing" placeholder="Target Northing" value="${mission.TargetNorthing || ''}">
+    <input type="text" id="target-northing" placeholder="Target Northing (5 digits)" value="${mission.TargetNorthing || ''}">
     <div class="error" id="northing-error"></div>
     <input type="text" id="target-height" placeholder="Target Height (Meters)" value="${mission.TargetHeight || ''}">
     <div class="error" id="target-height-error"></div>
@@ -159,9 +159,9 @@ window.showWithObserver = function () {
   setActiveTab('With Forward Observer');
   const mission = fireMissions[selectedMissionIndex];
   document.getElementById('inputs-container').innerHTML = `
-    <input type="text" id="observer-easting" placeholder="Observer Easting" value="${mission.ObserverEasting || ''}">
+    <input type="text" id="observer-easting" placeholder="Observer Easting (5 digits)" value="${mission.ObserverEasting || ''}">
     <div class="error" id="observer-easting-error"></div>
-    <input type="text" id="observer-northing" placeholder="Observer Northing" value="${mission.ObserverNorthing || ''}">
+    <input type="text" id="observer-northing" placeholder="Observer Northing (5 digits)" value="${mission.ObserverNorthing || ''}">
     <div class="error" id="observer-northing-error"></div>
     <input type="text" id="observer-bearing" placeholder="Observer Bearing to Target (0-360 degrees)" value="${mission.ObserverBearing || ''}">
     <div class="error" id="bearing-error"></div>
@@ -390,27 +390,23 @@ window.calculate = function () {
       mission.adjustFireBearing = adjustFireBearing.value;
       mission.adjustFireRange = adjustFireRange.value;
 
-      // Calculate new target grid based on current coordinates
       const bearingRad = Number(adjustFireBearing.value) * (Math.PI / 180);
       const adjustDistance = Number(adjustFireRange.value);
       const newTargetEasting = Number(mission.TargetEasting) + adjustDistance * Math.sin(bearingRad);
       const newTargetNorthing = Number(mission.TargetNorthing) + adjustDistance * Math.cos(bearingRad);
 
-      // Update mission with new target coordinates
       mission.TargetEasting = newTargetEasting.toFixed(0);
       mission.TargetNorthing = newTargetNorthing.toFixed(0);
 
-      // Calculate new firing solution to the adjusted target
       mission.firingSolutions = main(
         launcherEasting,
         launcherNorthing,
         launcherHeight,
         newTargetEasting,
         newTargetNorthing,
-        Number(mission.TargetHeight || 0)  // Keep existing height
+        Number(mission.TargetHeight || 0)
       );
 
-      // Refresh the Adjust Fire tab display with new coordinates
       document.getElementById('inputs-container').innerHTML = `
         <div>New Target Grid (after adjustment):</div>
         <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting}</span></div>
@@ -437,8 +433,12 @@ window.displayFiringSolution = function () {
   const mission = fireMissions[selectedMissionIndex];
   const solution = mission.firingSolutions || {};
   // Convert mils to degrees
-  const degreesIndirect = (solution.milsIndirect || 0) * (360 / 6400);
-  const degreesDirect = (solution.milsDirect || 0) * (360 / 6400);
+  let degreesIndirect = (solution.milsIndirect || 0) * (360 / 6400);
+  let degreesDirect = (solution.milsDirect || 0) * (360 / 6400);
+  // Apply 0.4° offset for indirect angles above 60°
+  if (degreesIndirect > 60) {
+    degreesIndirect += 0.4;
+  }
   document.querySelector('.firing-solution').innerHTML = `
     <div>Range: ${solution.horizontalDistance?.toFixed(2) || '00'}<br>Bearing: ${solution.bearingDeg || '00.00'}</div>
     <div class="vertical-line"></div>
