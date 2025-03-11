@@ -146,9 +146,9 @@ window.showWithoutObserver = function () {
   setActiveTab('Without Forward Observer');
   const mission = fireMissions[selectedMissionIndex];
   document.getElementById('inputs-container').innerHTML = `
-    <input type="text" id="target-easting" placeholder="Target Easting (5 digits)" value="${mission.TargetEasting || ''}">
+    <input type="text" id="target-easting" placeholder="Target Easting" value="${mission.TargetEasting || ''}">
     <div class="error" id="easting-error"></div>
-    <input type="text" id="target-northing" placeholder="Target Northing (5 digits)" value="${mission.TargetNorthing || ''}">
+    <input type="text" id="target-northing" placeholder="Target Northing" value="${mission.TargetNorthing || ''}">
     <div class="error" id="northing-error"></div>
     <input type="text" id="target-height" placeholder="Target Height (Meters)" value="${mission.TargetHeight || ''}">
     <div class="error" id="target-height-error"></div>
@@ -159,9 +159,9 @@ window.showWithObserver = function () {
   setActiveTab('With Forward Observer');
   const mission = fireMissions[selectedMissionIndex];
   document.getElementById('inputs-container').innerHTML = `
-    <input type="text" id="observer-easting" placeholder="Observer Easting (5 digits)" value="${mission.ObserverEasting || ''}">
+    <input type="text" id="observer-easting" placeholder="Observer Easting" value="${mission.ObserverEasting || ''}">
     <div class="error" id="observer-easting-error"></div>
-    <input type="text" id="observer-northing" placeholder="Observer Northing (5 digits)" value="${mission.ObserverNorthing || ''}">
+    <input type="text" id="observer-northing" placeholder="Observer Northing" value="${mission.ObserverNorthing || ''}">
     <div class="error" id="observer-northing-error"></div>
     <input type="text" id="observer-bearing" placeholder="Observer Bearing to Target (0-360 degrees)" value="${mission.ObserverBearing || ''}">
     <div class="error" id="bearing-error"></div>
