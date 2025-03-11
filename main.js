@@ -132,6 +132,7 @@ window.selectMission = function (index) {
   recallMissionData();
   updateAdjustFireButton();
   displayFiringSolution();
+  showWithoutObserver(); // Switch to "Without Forward Observer" tab
 };
 
 window.setActiveTab = function (tabName) {
@@ -239,6 +240,12 @@ window.start = function () {
   }
 };
 
+// Helper function to pad a number with trailing zeros to 5 digits
+function padToFiveDigits(value) {
+  const numStr = String(value).replace(/\D/g, ''); // Remove non-digits
+  return numStr.padEnd(5, '0').slice(0, 5); // Pad with zeros, ensure 5 digits
+}
+
 window.calculate = function () {
   const mission = fireMissions[selectedMissionIndex];
   const activeTab = document.querySelector('.tab.active')?.textContent || '';
@@ -254,18 +261,24 @@ window.calculate = function () {
     const targetNorthing = document.getElementById('target-northing');
     const targetHeight = document.getElementById('target-height');
 
-    if (targetEasting.value.length !== 5 || isNaN(targetEasting.value)) {
+    // Pad easting and northing to 5 digits
+    const paddedTargetEasting = padToFiveDigits(targetEasting.value);
+    const paddedTargetNorthing = padToFiveDigits(targetNorthing.value);
+
+    if (paddedTargetEasting.length !== 5 || isNaN(paddedTargetEasting)) {
       document.getElementById('easting-error').textContent = "Must be a 5-digit number.";
       valid = false;
     } else {
       document.getElementById('easting-error').textContent = "";
+      targetEasting.value = paddedTargetEasting; // Update input field
     }
 
-    if (targetNorthing.value.length !== 5 || isNaN(targetNorthing.value)) {
+    if (paddedTargetNorthing.length !== 5 || isNaN(paddedTargetNorthing)) {
       document.getElementById('northing-error').textContent = "Must be a 5-digit number.";
       valid = false;
     } else {
       document.getElementById('northing-error').textContent = "";
+      targetNorthing.value = paddedTargetNorthing; // Update input field
     }
 
     if (isNaN(targetHeight.value) || targetHeight.value === '') {
@@ -276,15 +289,15 @@ window.calculate = function () {
     }
 
     if (valid) {
-      mission.TargetEasting = targetEasting.value;
-      mission.TargetNorthing = targetNorthing.value;
+      mission.TargetEasting = paddedTargetEasting;
+      mission.TargetNorthing = paddedTargetNorthing;
       mission.TargetHeight = targetHeight.value;
       mission.firingSolutions = main(
         launcherEasting,
         launcherNorthing,
         launcherHeight,
-        Number(targetEasting.value),
-        Number(targetNorthing.value),
+        Number(paddedTargetEasting),
+        Number(paddedTargetNorthing),
         Number(targetHeight.value)
       );
     }
@@ -295,18 +308,24 @@ window.calculate = function () {
     const observerRange = document.getElementById('observer-range');
     const observerAltitude = document.getElementById('observer-altitude');
 
-    if (observerEasting.value.length !== 5 || isNaN(observerEasting.value)) {
+    // Pad easting and northing to 5 digits
+    const paddedObserverEasting = padToFiveDigits(observerEasting.value);
+    const paddedObserverNorthing = padToFiveDigits(observerNorthing.value);
+
+    if (paddedObserverEasting.length !== 5 || isNaN(paddedObserverEasting)) {
       document.getElementById('observer-easting-error').textContent = "Must be a 5-digit number.";
       valid = false;
     } else {
       document.getElementById('observer-easting-error').textContent = "";
+      observerEasting.value = paddedObserverEasting; // Update input field
     }
 
-    if (observerNorthing.value.length !== 5 || isNaN(observerNorthing.value)) {
+    if (paddedObserverNorthing.length !== 5 || isNaN(paddedObserverNorthing)) {
       document.getElementById('observer-northing-error').textContent = "Must be a 5-digit number.";
       valid = false;
     } else {
       document.getElementById('observer-northing-error').textContent = "";
+      observerNorthing.value = paddedObserverNorthing; // Update input field
     }
 
     if (isNaN(observerBearing.value) || observerBearing.value < 0 || observerBearing.value > 360) {
@@ -331,8 +350,8 @@ window.calculate = function () {
     }
 
     if (valid) {
-      mission.ObserverEasting = observerEasting.value;
-      mission.ObserverNorthing = observerNorthing.value;
+      mission.ObserverEasting = paddedObserverEasting;
+      mission.ObserverNorthing = paddedObserverNorthing;
       mission.ObserverBearing = observerBearing.value;
       mission.ObserverRangeToTgt = observerRange.value;
       mission.ObserverAltitude = observerAltitude.value;
@@ -340,8 +359,8 @@ window.calculate = function () {
         launcherNorthing,
         launcherEasting,
         launcherHeight,
-        Number(observerEasting.value),
-        Number(observerNorthing.value),
+        Number(paddedObserverEasting),
+        Number(paddedObserverNorthing),
         Number(observerBearing.value),
         Number(observerRange.value),
         Number(observerAltitude.value)
