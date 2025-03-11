@@ -1,6 +1,6 @@
 import { main, observerGridCalc } from './bearingrangemils.js';
 
-// Fire mission structure (removed OriginalTarget* properties)
+// Fire mission structure
 let fireMissions = [{
   name: 'Mission 1',
   TargetEasting: null,
@@ -175,14 +175,9 @@ window.showAdjustFire = function () {
   setActiveTab('Adjust Fire');
   const mission = fireMissions[selectedMissionIndex];
   document.getElementById('inputs-container').innerHTML = `
-    <div>Current Target Grid:</div>
-    <div>Easting: <span id="adjust-current-easting">${mission.TargetEasting || 'N/A'}</span></div>
-    <div>Northing: <span id="adjust-current-northing">${mission.TargetNorthing || 'N/A'}</span></div>
-    <div>Height: <span id="adjust-current-height">${mission.TargetHeight || 'N/A'}</span> m</div>
     <div>New Target Grid (after adjustment):</div>
     <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting || 'N/A'}</span></div>
     <div>Northing: <span id="adjust-new-northing">${mission.TargetNorthing || 'N/A'}</span></div>
-    <div>Height: <span id="adjust-new-height">${mission.TargetHeight || 'N/A'}</span> m</div>
     <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
     <div class="error" id="adjustment-bearing-error"></div>
     <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
@@ -376,22 +371,15 @@ window.calculate = function () {
       mission.adjustFireBearing = adjustFireBearing.value;
       mission.adjustFireRange = adjustFireRange.value;
 
-      // Store current coordinates before adjustment for display
-      const currentEasting = mission.TargetEasting;
-      const currentNorthing = mission.TargetNorthing;
-      const currentHeight = mission.TargetHeight || 0;
-
       // Calculate new target grid based on current coordinates
       const bearingRad = Number(adjustFireBearing.value) * (Math.PI / 180);
       const adjustDistance = Number(adjustFireRange.value);
       const newTargetEasting = Number(mission.TargetEasting) + adjustDistance * Math.sin(bearingRad);
       const newTargetNorthing = Number(mission.TargetNorthing) + adjustDistance * Math.cos(bearingRad);
-      const newTargetHeight = Number(mission.TargetHeight || 0);
 
       // Update mission with new target coordinates
       mission.TargetEasting = newTargetEasting.toFixed(0);
       mission.TargetNorthing = newTargetNorthing.toFixed(0);
-      mission.TargetHeight = newTargetHeight;
 
       // Calculate new firing solution to the adjusted target
       mission.firingSolutions = main(
@@ -400,19 +388,14 @@ window.calculate = function () {
         launcherHeight,
         newTargetEasting,
         newTargetNorthing,
-        newTargetHeight
+        Number(mission.TargetHeight || 0)  // Keep existing height
       );
 
-      // Refresh the Adjust Fire tab display with current (pre-adjustment) and new coordinates
+      // Refresh the Adjust Fire tab display with new coordinates
       document.getElementById('inputs-container').innerHTML = `
-        <div>Current Target Grid:</div>
-        <div>Easting: <span id="adjust-current-easting">${currentEasting}</span></div>
-        <div>Northing: <span id="adjust-current-northing">${currentNorthing}</span></div>
-        <div>Height: <span id="adjust-current-height">${currentHeight}</span> m</div>
         <div>New Target Grid (after adjustment):</div>
         <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting}</span></div>
         <div>Northing: <span id="adjust-new-northing">${mission.TargetNorthing}</span></div>
-        <div>Height: <span id="adjust-new-height">${mission.TargetHeight}</span> m</div>
         <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
         <div class="error" id="adjustment-bearing-error"></div>
         <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
