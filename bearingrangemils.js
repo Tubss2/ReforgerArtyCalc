@@ -14,7 +14,7 @@ function simulateTrajectory(angleDeg, targetRange, heightLauncher, heightTarget,
     let vy0 = projectileVelocity * Math.sin(angleRad);
     let x = 0;
     let y = heightLauncher;
-    const dt = 0.01;
+    const dt = 0.0333; // Match 30 FPS (33.3ms)
     const tMax = 100;
 
     let timeOfFlight = 0;
@@ -94,21 +94,20 @@ function main(eastingLauncher, northingLauncher, heightLauncher,
         eastingLauncher, northingLauncher, heightLauncher,
         eastingTarget, northingTarget, heightTarget);
 
-    // Golden-section search to find the optimal launch angle below 45 degrees
+    // Direct fire (below 45°)
     const optimalAngleDegBelow = goldenSectionSearch(0, 45, angleDeg => 
         objectiveFunction(angleDeg, horizontalDistance, heightLauncher, heightTarget, projectileMass, projectileAirDrag, projectileVelocity));
     const milsDirect = Math.round(degreesToMils(optimalAngleDegBelow));
     const { timeOfFlight: tofDirect } = simulateTrajectory(optimalAngleDegBelow, horizontalDistance, heightLauncher, heightTarget,
                                                            projectileMass, projectileAirDrag, projectileVelocity);
 
-    // Golden-section search to find the optimal launch angle above 45 degrees
+    // Indirect fire (above 45°)
     const optimalAngleDegAbove = goldenSectionSearch(45, 90, angleDeg =>
         objectiveFunction(angleDeg, horizontalDistance, heightLauncher, heightTarget, projectileMass, projectileAirDrag, projectileVelocity));
-    const milsIndirect = Math.round(degreesToMils(optimalAngleDegAbove) - 17);
+    const milsIndirect = Math.round(degreesToMils(optimalAngleDegAbove)); // Removed -17, adjust if needed
     const { timeOfFlight: tofIndirect } = simulateTrajectory(optimalAngleDegAbove, horizontalDistance, heightLauncher, heightTarget,
                                                              projectileMass, projectileAirDrag, projectileVelocity);
 
-    // Output values
     return {
         horizontalDistance: horizontalDistance,
         bearingDeg: bearingDeg.toFixed(2),
@@ -119,18 +118,13 @@ function main(eastingLauncher, northingLauncher, heightLauncher,
     };
 }
 
-// Function to calculate results based on observer data
+// Observer function (unchanged)
 function observerGridCalc(northingLauncher, eastingLauncher, heightLauncher,
                           eastingObserver, northingObserver, observerBearingToTarget, observerRangeToTarget, heightTarget) {
-    
-    // Convert bearing to radians
     const bearingRad = observerBearingToTarget * (Math.PI / 180);
-
-    // Calculate the target's easting and northing using the observer's bearing and range to the target
     const eastingTarget = eastingObserver + observerRangeToTarget * Math.sin(bearingRad);
     const northingTarget = northingObserver + observerRangeToTarget * Math.cos(bearingRad);
 
-    // Call main to finalize the calculation
     const {
         horizontalDistance,
         bearingDeg,
@@ -140,19 +134,16 @@ function observerGridCalc(northingLauncher, eastingLauncher, heightLauncher,
         tofDirect
     } = main(eastingLauncher, northingLauncher, heightLauncher, eastingTarget, northingTarget, heightTarget);
 
-    // Return an object including the main result expanded out and the updated target coordinates
     return {
-        horizontalDistance: horizontalDistance,
-        bearingDeg: bearingDeg,
-        milsIndirect: milsIndirect,
-        tofIndirect: tofIndirect,
-        milsDirect: milsDirect,
-        tofDirect: tofDirect,
-        updatedEastingTarget: eastingTarget,  // Calculated eastingTarget
-        updatedNorthingTarget: northingTarget // Calculated northingTarget
+        horizontalDistance,
+        bearingDeg,
+        milsIndirect,
+        tofIndirect,
+        milsDirect,
+        tofDirect,
+        updatedEastingTarget: eastingTarget,
+        updatedNorthingTarget: northingTarget
     };
 }
 
-
-// Export the main and observerGridCalc functions for use in other modules
 export { main, observerGridCalc };
