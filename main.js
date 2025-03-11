@@ -175,9 +175,13 @@ window.showAdjustFire = function () {
   setActiveTab('Adjust Fire');
   const mission = fireMissions[selectedMissionIndex];
   document.getElementById('inputs-container').innerHTML = `
-    <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Fire Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
+    <div>Current Target Grid:</div>
+    <div>Easting: ${mission.TargetEasting || 'N/A'}</div>
+    <div>Northing: ${mission.TargetNorthing || 'N/A'}</div>
+    <div>Height: ${mission.TargetHeight || 'N/A'} m</div>
+    <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
     <div class="error" id="adjustment-bearing-error"></div>
-    <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Fire Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
+    <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
     <div class="error" id="adjustment-range-error"></div>
   `;
 };
@@ -232,7 +236,7 @@ window.start = function () {
     document.getElementById('launcher-easting').value = launcherEasting.value;
     document.getElementById('launcher-northing').value = launcherNorthing.value;
     document.getElementById('launcher-height').value = launcherHeight.value;
-    showWithoutObserver(); // Default view
+    showWithoutObserver();
   }
 };
 
@@ -367,19 +371,28 @@ window.calculate = function () {
     if (valid && mission.TargetEasting && mission.TargetNorthing) {
       mission.adjustFireBearing = adjustFireBearing.value;
       mission.adjustFireRange = adjustFireRange.value;
-      // Adjust fire calculates a new target from the previous target
-      mission.firingSolutions = observerGridCalc(
-        launcherNorthing,
+
+      // Calculate new target grid based on adjustment
+      const bearingRad = Number(adjustFireBearing.value) * (Math.PI / 180);
+      const adjustDistance = Number(adjustFireRange.value);
+      const newTargetEasting = Number(mission.TargetEasting) + adjustDistance * Math.sin(bearingRad);
+      const newTargetNorthing = Number(mission.TargetNorthing) + adjustDistance * Math.cos(bearingRad);
+      const newTargetHeight = Number(mission.TargetHeight || 0); // Fallback to 0 if undefined
+
+      // Update mission with new target coordinates
+      mission.TargetEasting = newTargetEasting.toFixed(0); // Keep as integer for grid format
+      mission.TargetNorthing = newTargetNorthing.toFixed(0);
+      mission.TargetHeight = newTargetHeight;
+
+      // Calculate new firing solution to the adjusted target
+      mission.firingSolutions = main(
         launcherEasting,
+        launcherNorthing,
         launcherHeight,
-        Number(mission.TargetEasting),
-        Number(mission.TargetNorthing),
-        Number(adjustFireBearing.value),
-        Number(adjustFireRange.value),
-        Number(mission.TargetHeight || 0)
+        newTargetEasting,
+        newTargetNorthing,
+        newTargetHeight
       );
-      mission.TargetEasting = mission.firingSolutions.updatedEastingTarget;
-      mission.TargetNorthing = mission.firingSolutions.updatedNorthingTarget;
     } else if (!mission.TargetEasting || !mission.TargetNorthing) {
       alert('No previous target data available for adjustment.');
       valid = false;
@@ -404,5 +417,3 @@ window.displayFiringSolution = function () {
     <div>Direct Mils: ${solution.milsDirect || '00'}<br>TOF: ${solution.tofDirect || '00.00'}</div>
   `;
 };
-
-// Remove debugPrintSaniVariables since it’s not critical for production
