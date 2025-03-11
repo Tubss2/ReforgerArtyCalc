@@ -436,11 +436,14 @@ window.calculate = function () {
 window.displayFiringSolution = function () {
   const mission = fireMissions[selectedMissionIndex];
   const solution = mission.firingSolutions || {};
+  // Convert mils to degrees
+  const degreesIndirect = (solution.milsIndirect || 0) * (360 / 6400);
+  const degreesDirect = (solution.milsDirect || 0) * (360 / 6400);
   document.querySelector('.firing-solution').innerHTML = `
     <div>Range: ${solution.horizontalDistance?.toFixed(2) || '00'}<br>Bearing: ${solution.bearingDeg || '00.00'}</div>
     <div class="vertical-line"></div>
-    <div>Indirect Mils: ${solution.milsIndirect || '00'}<br>TOF: ${solution.tofIndirect || '00.00'}</div>
+    <div>Indirect Deg: ${degreesIndirect.toFixed(2) || '00.00'}<br>TOF: ${solution.tofIndirect || '00.00'}</div>
     <div class="vertical-line"></div>
-    <div>Direct Mils: ${solution.milsDirect || '00'}<br>TOF: ${solution.tofDirect || '00.00'}</div>
+    <div>Direct Deg: ${degreesDirect.toFixed(2) || '00.00'}<br>TOF: ${solution.tofDirect || '00.00'}</div>
   `;
 };
