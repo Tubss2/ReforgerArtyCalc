@@ -1,6 +1,6 @@
 import { main, observerGridCalc } from './bearingrangemils.js';
 
-// Fire mission structure
+// Fire mission structure (removed OriginalTarget* properties)
 let fireMissions = [{
   name: 'Mission 1',
   TargetEasting: null,
@@ -376,7 +376,12 @@ window.calculate = function () {
       mission.adjustFireBearing = adjustFireBearing.value;
       mission.adjustFireRange = adjustFireRange.value;
 
-      // Calculate new target grid based on adjustment
+      // Store current coordinates before adjustment for display
+      const currentEasting = mission.TargetEasting;
+      const currentNorthing = mission.TargetNorthing;
+      const currentHeight = mission.TargetHeight || 0;
+
+      // Calculate new target grid based on current coordinates
       const bearingRad = Number(adjustFireBearing.value) * (Math.PI / 180);
       const adjustDistance = Number(adjustFireRange.value);
       const newTargetEasting = Number(mission.TargetEasting) + adjustDistance * Math.sin(bearingRad);
@@ -398,10 +403,21 @@ window.calculate = function () {
         newTargetHeight
       );
 
-      // Update the "New Target Grid" display in the Adjust Fire tab
-      document.getElementById('adjust-new-easting').textContent = mission.TargetEasting;
-      document.getElementById('adjust-new-northing').textContent = mission.TargetNorthing;
-      document.getElementById('adjust-new-height').textContent = mission.TargetHeight;
+      // Refresh the Adjust Fire tab display with current (pre-adjustment) and new coordinates
+      document.getElementById('inputs-container').innerHTML = `
+        <div>Current Target Grid:</div>
+        <div>Easting: <span id="adjust-current-easting">${currentEasting}</span></div>
+        <div>Northing: <span id="adjust-current-northing">${currentNorthing}</span></div>
+        <div>Height: <span id="adjust-current-height">${currentHeight}</span> m</div>
+        <div>New Target Grid (after adjustment):</div>
+        <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting}</span></div>
+        <div>Northing: <span id="adjust-new-northing">${mission.TargetNorthing}</span></div>
+        <div>Height: <span id="adjust-new-height">${mission.TargetHeight}</span> m</div>
+        <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
+        <div class="error" id="adjustment-bearing-error"></div>
+        <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
+        <div class="error" id="adjustment-range-error"></div>
+      `;
     } else if (!mission.TargetEasting || !mission.TargetNorthing) {
       alert('No previous target data available for adjustment.');
       valid = false;
