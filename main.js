@@ -1,6 +1,6 @@
 import { main, observerGridCalc } from './bearingrangemils.js';
 
-// Fire mission structure
+// Initialize fire missions with spread variables
 let fireMissions = [{
   name: 'Mission 1',
   TargetEasting: null,
@@ -14,10 +14,117 @@ let fireMissions = [{
   adjustFireRange: null,
   adjustFireBearing: null,
   HasPressedCalculate: false,
-  firingSolutions: {}
+  firingSolutions: {},
+  spread: {
+    bearing: null,
+    indirect: { mils: null },
+    direct: { mils: null },
+    bearingSolution: null,
+    elevationSolution: null
+  }
 }];
 
 let selectedMissionIndex = 0;
+
+// Function to show the "Adjust Fire" tab
+window.showAdjustFire = function () {
+  setActiveTab('Adjust Fire');
+  const mission = fireMissions[selectedMissionIndex];
+  
+  // Preserve spread adjustment text if calculated
+  let spreadText = '';
+  if (mission.spread && mission.spread.bearingSolution && mission.spread.elevationSolution) {
+    // Convert elevationSolution from mils to degrees just before display
+    const elevationDiffDegrees = (Number(mission.spread.elevationSolution) * 0.05625).toFixed(2);
+    spreadText = `
+      Adjust bearing ± ${mission.spread.bearingSolution}°<br>
+      Adjust elevation ± ${elevationDiffDegrees}°
+    `;
+  }
+
+  document.getElementById('inputs-container').innerHTML = `
+    <div style="float: left; width: 50%;">
+      <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
+      <div class="error" id="adjustment-bearing-error"></div>
+      <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
+      <div class="error" id="adjustment-range-error"></div>
+      <button id="calculate-adjustment-btn" style="margin-top: 10px;">Calculate Adjustment</button>
+    </div>
+    <div style="float: right; width: 50%; text-align: right;">
+      <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)">
+      <button id="calculate-spread-btn" style="margin-top: 10px;">Calculate Spread</button>
+      <div id="spread-adjustment-text" style="margin-top: 10px;">${spreadText}</div>
+    </div>
+    <div style="clear: both;"></div>
+  `;
+
+  // Add event listeners
+  document.getElementById('calculate-adjustment-btn').addEventListener('click', calculate);
+  document.getElementById('calculate-spread-btn').addEventListener('click', calculateSpread);
+};
+
+// Function to calculate spread
+window.calculateSpread = function () {
+  const mission = fireMissions[selectedMissionIndex];
+  const spreadInput = document.getElementById('manual-spread');
+  const spreadValue = Number(spreadInput.value);
+
+  // Validate input
+  if (isNaN(spreadValue) || spreadValue <= 0) {
+    alert('Please enter a valid positive number for Manual Spread.');
+    return;
+  }
+
+  // Get current coordinates
+  const currentEasting = Number(mission.TargetEasting);
+  const currentNorthing = Number(mission.TargetNorthing);
+  
+  // Calculate temporary spread coordinates (do not update mission)
+  const spreadEasting = currentEasting + spreadValue;
+  const spreadNorthing = currentNorthing + spreadValue;
+
+  // Get launcher data
+  const launcherEasting = Number(document.getElementById('launcher-easting').value);
+  const launcherNorthing = Number(document.getElementById('launcher-northing').value);
+  const launcherHeight = Number(document.getElementById('launcher-height').value);
+  const targetHeight = Number(mission.TargetHeight || 0);
+
+  // Calculate spread firing solution
+  const spreadSolution = main(
+    launcherEasting,
+    launcherNorthing,
+    launcherHeight,
+    spreadEasting,
+    spreadNorthing,
+    targetHeight
+  );
+
+  // Store spread results
+  mission.spread = {
+    bearing: spreadSolution.bearingDeg,
+    indirect: { mils: spreadSolution.milsIndirect },
+    direct: { mils: spreadSolution.milsDirect }
+  };
+
+  // Calculate differences
+  const currentBearing = Number(mission.firingSolutions.bearingDeg);
+  const spreadBearing = Number(spreadSolution.bearingDeg);
+  const bearingDiff = Math.abs(spreadBearing - currentBearing);
+
+  const currentIndirectMils = mission.firingSolutions.milsIndirect;
+  const spreadIndirectMils = spreadSolution.milsIndirect;
+  const elevationDiff = Math.abs(spreadIndirectMils - currentIndirectMils);
+
+  // Store differences
+  mission.spread.bearingSolution = bearingDiff.toFixed(2);
+  mission.spread.elevationSolution = elevationDiff.toFixed(2);
+
+  // Update display
+  document.getElementById('spread-adjustment-text').innerHTML = `
+    Adjust bearing ± ${mission.spread.bearingSolution}°<br>
+    Adjust elevation ± ${mission.spread.elevationSolution} mils
+  `;
+};
 
 window.onload = function () {
   setActiveTab('Without Forward Observer');

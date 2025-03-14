@@ -235,6 +235,14 @@
       font-size: 14px;
       color: #DFA25A;
     }
+
+    .version-number {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: #DFA25A;
+    }
   </style>
 </head>
 <body>

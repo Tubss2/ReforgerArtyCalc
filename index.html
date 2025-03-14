@@ -9,15 +9,16 @@
 <script type="module" src="./main.js"></script>
 <body>
 
-<div class="initial-overlay" id="initial-overlay">
-  <h1>To start, enter your launcher's current grid position</h1>
-  <input type="text" id="initial-launcher-easting" placeholder="Launcher Easting (5 digits)">
-  <div class="error" id="initial-easting-error"></div>
-  <input type="text" id="initial-launcher-northing" placeholder="Launcher Northing (5 digits)">
-  <div class="error" id="initial-northing-error"></div>
-  <input type="text" id="initial-launcher-height" placeholder="Launcher Height (Meters)">
-  <div class="error" id="initial-height-error"></div>
-  <button class="start-button" onclick="start()">START</button>
+  <div id="initial-overlay">
+    <h1>Artillery Calculator</h1>
+    <input type="text" id="initial-launcher-easting" placeholder="Launcher Easting (5 digits)">
+    <div class="error" id="initial-easting-error"></div>
+    <input type="text" id="initial-launcher-northing" placeholder="Launcher Northing (5 digits)">
+    <div class="error" id="initial-northing-error"></div>
+    <input type="text" id="initial-launcher-height" placeholder="Launcher Height (Meters)">
+    <div class="error" id="initial-height-error"></div>
+    <button onclick="start()">Start</button>
+    <div id="version-number">v1.0.0</div>
 </div>
 
 <div class="container" id="main-container">
