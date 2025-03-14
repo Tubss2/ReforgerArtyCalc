@@ -16,7 +16,7 @@
     <input type="text" id="initial-launcher-height" placeholder="Launcher Height (Meters)">
     <div class="error" id="initial-height-error"></div>
     <button onclick="start()">Start</button>
-    <div id="version-number">v1.0.3</div> <!-- Paste this line here -->
+    <div id="version-number">v1.0.4</div> <!-- Paste this line here -->
   </div>
 
   <div class="container" id="main-container">
@@ -55,7 +55,20 @@
           <button class="tab adjust-fire disabled-button" id="adjust-fire-btn" disabled>Adjust Fire</button>
         </div>
 
-        <div class="inputs-container" id="inputs-container"></div>
+        <div class="inputs-container" id="inputs-container">
+          <div style="float: left; width: 50%;">
+            <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)">
+            <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)">
+          </div>
+          <div style="float: right; width: 50%; text-align: right;">
+            <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)">
+            <button id="calculate-spread-btn">Calculate Spread</button>
+          </div>
+          <div style="clear: both;"></div>
+          <div class="calculate-button">
+            <button id="calculate-adjustment-btn">Calculate Adjustment</button>
+          </div>
+        </div>
 
         <div class="calculate-button">
           <button onclick="calculate()">CALCULATE</button>

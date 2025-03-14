@@ -30,6 +30,7 @@ let selectedMissionIndex = 0;
 
 // Function to show the "Adjust Fire" tab
 window.showAdjustFire = function () {
+  console.log("showAdjustFire called");
   setActiveTab('Adjust Fire');
   const mission = fireMissions[selectedMissionIndex];
   
