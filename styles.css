@@ -192,6 +192,7 @@
       align-items: center;
       height: 100vh;
       background-color: #161C1A;
+      position: relative;
     }
 
     .initial-overlay h1 {
@@ -236,7 +237,7 @@
       color: #DFA25A;
     }
 
-    .version-number {
+    #version-number {
       position: absolute;
       bottom: 10px;
       right: 10px;
