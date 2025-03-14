@@ -1,4 +1,6 @@
 import { main, observerGridCalc } from './bearingrangemils.js';
+console.log("main.js loaded");
+
 
 // Initialize fire missions with spread variables
 let fireMissions = [{
@@ -34,7 +36,6 @@ window.showAdjustFire = function () {
   // Preserve spread adjustment text if calculated
   let spreadText = '';
   if (mission.spread && mission.spread.bearingSolution && mission.spread.elevationSolution) {
-    // Convert elevationSolution from mils to degrees just before display
     const elevationDiffDegrees = (Number(mission.spread.elevationSolution) * 0.05625).toFixed(2);
     spreadText = `
       Adjust bearing ± ${mission.spread.bearingSolution}°<br>
@@ -42,6 +43,7 @@ window.showAdjustFire = function () {
     `;
   }
 
+  // Populate inputs-container with Adjust Fire content
   document.getElementById('inputs-container').innerHTML = `
     <div style="float: left; width: 50%;">
       <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
