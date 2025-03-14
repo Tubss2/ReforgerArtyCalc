@@ -44,14 +44,19 @@ window.showAdjustFire = function () {
     `;
   }
 
+  // Determine if the Calculate Adjustment button should be enabled
+  const calculateButtonDisabled = mission.HasPressedCalculate ? '' : 'disabled';
+
   // Populate inputs-container with Adjust Fire content
   document.getElementById('inputs-container').innerHTML = `
     <div style="float: left; width: 50%;">
+      <div>New Target Grid (after adjustment):</div>
+      <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting || 'N/A'}</span></div>
+      <div>Northing: <span id="adjust-new-northing">${mission.TargetNorthing || 'N/A'}</span></div>
       <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
       <div class="error" id="adjustment-bearing-error"></div>
       <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
       <div class="error" id="adjustment-range-error"></div>
-      <button id="calculate-adjustment-btn" style="margin-top: 10px;">Calculate Adjustment</button>
     </div>
     <div style="float: right; width: 50%; text-align: right;">
       <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)">
@@ -59,11 +64,19 @@ window.showAdjustFire = function () {
       <div id="spread-adjustment-text" style="margin-top: 10px;">${spreadText}</div>
     </div>
     <div style="clear: both;"></div>
+    <div class="calculate-button">
+      <button id="calculate-adjustment-btn" ${calculateButtonDisabled}>Calculate Adjustment</button>
+    </div>
   `;
 
-  // Add event listeners
-  document.getElementById('calculate-adjustment-btn').addEventListener('click', calculate);
-  document.getElementById('calculate-spread-btn').addEventListener('click', calculateSpread);
+  // Add event listeners if the button is enabled
+  if (mission.HasPressedCalculate) {
+    document.getElementById('calculate-adjustment-btn').addEventListener('click', calculate);
+    document.getElementById('calculate-spread-btn').addEventListener('click', calculateSpread);
+  } else {
+    document.getElementById('calculate-adjustment-btn').addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    document.getElementById('calculate-spread-btn').addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+  }
 };
 
 // Function to calculate spread
@@ -262,7 +275,11 @@ window.showWithoutObserver = function () {
     <div class="error" id="northing-error"></div>
     <input type="text" id="target-height" placeholder="Target Height (Meters)" value="${mission.TargetHeight || ''}">
     <div class="error" id="target-height-error"></div>
+    <div class="calculate-button">
+      <button id="calculate-btn">Calculate</button>
+    </div>
   `;
+  document.getElementById('calculate-btn').addEventListener('click', calculate);
 };
 
 window.showWithObserver = function () {
@@ -279,7 +296,11 @@ window.showWithObserver = function () {
     <div class="error" id="observer-range-error"></div>
     <input type="text" id="observer-altitude" placeholder="Observers Estimation of target altitude (Meters)" value="${mission.ObserverAltitude || ''}">
     <div class="error" id="observer-altitude-error"></div>
+    <div class="calculate-button">
+      <button id="calculate-btn">Calculate</button>
+    </div>
   `;
+  document.getElementById('calculate-btn').addEventListener('click', calculate);
 };
 
 window.showAdjustFire = function () {
@@ -299,17 +320,9 @@ window.showAdjustFire = function () {
 window.updateAdjustFireButton = function () {
   const mission = fireMissions[selectedMissionIndex];
   const adjustFireBtn = document.getElementById('adjust-fire-btn');
-  if (mission.HasPressedCalculate) {
-    adjustFireBtn.disabled = false;
-    adjustFireBtn.classList.remove('disabled-button');
-    adjustFireBtn.innerHTML = 'Adjust Fire';
-    adjustFireBtn.onclick = showAdjustFire;
-  } else {
-    adjustFireBtn.disabled = true;
-    adjustFireBtn.classList.add('disabled-button');
-    adjustFireBtn.innerHTML = 'Adjust Fire ❌';
-    adjustFireBtn.onclick = () => alert('You must calculate a solution first to adjust fire');
-  }
+  // Remove the disabling logic for the tab button
+  adjustFireBtn.classList.remove('disabled-button');
+  adjustFireBtn.innerHTML = 'Adjust Fire';
 };
 
 window.start = function () {
