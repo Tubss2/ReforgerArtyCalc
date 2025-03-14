@@ -161,10 +161,10 @@ function calculateSpread() {
 
   mission.spread.bearingSolution = bearingDiff.toFixed(2);
   mission.spread.elevationSolution = elevationDiff.toFixed(2);
-
+  const elevationDiffDegrees = (Number(mission.spread.elevationSolution) * 0.05625).toFixed(2);
   document.getElementById('spread-adjustment-text').innerHTML = `
     Adjust bearing ± ${mission.spread.bearingSolution}°<br>
-    Adjust elevation ± ${mission.spread.elevationSolution} mils
+    Adjust elevation ± ${elevationDiffDegrees}°
   `;
 }
 
