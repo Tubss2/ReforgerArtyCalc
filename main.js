@@ -159,15 +159,28 @@ function calculateSpread() {
   const spreadIndirectMils = spreadSolution.milsIndirect;
   const elevationDiff = Math.abs(spreadIndirectMils - currentIndirectMils);
 
+  // Store the differences for potential future use
   mission.spread.bearingSolution = bearingDiff.toFixed(2);
   mission.spread.elevationSolution = elevationDiff.toFixed(2);
-  const elevationDiffDegrees = (Number(mission.spread.elevationSolution) * 0.05625).toFixed(2);
+
+  // Calculate bearing limits with wrapping
+  let bearingLower = currentBearing - bearingDiff;
+  let bearingUpper = currentBearing + bearingDiff;
+
+  // Normalize bearings to 0-360°
+  bearingLower = ((bearingLower % 360) + 360) % 360; // Handles negative values
+  bearingUpper = ((bearingUpper % 360) + 360) % 360;
+
+  // Calculate elevation limits in degrees
+  const elevationLower = ((currentIndirectMils - elevationDiff) * 0.05625).toFixed(2);
+  const elevationUpper = ((currentIndirectMils + elevationDiff) * 0.05625).toFixed(2);
+
+  // Update the display with the new format
   document.getElementById('spread-adjustment-text').innerHTML = `
-    Adjust bearing ± ${mission.spread.bearingSolution}°<br>
-    Adjust elevation ± ${elevationDiffDegrees}°
+    Bearing fire between ${bearingLower.toFixed(2)}° and ${bearingUpper.toFixed(2)}°<br>
+    Elevation fire between ${elevationLower}° and ${elevationUpper}°
   `;
 }
-
 function addNewMission() {
   const missionIndex = fireMissions.length;
   fireMissions.push({
