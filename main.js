@@ -373,24 +373,33 @@ function padToFiveDigits(value) {
 }
 
 function calculate() {
+  console.log("Calculate function called");
   const selectedGun = document.getElementById('select-gun').value;
+  console.log("Selected gun:", selectedGun);
   const gunParamsCurrent = gunParameters[selectedGun];
+  console.log("Gun parameters:", gunParamsCurrent);
   const mission = fireMissions[selectedMissionIndex];
+  console.log("Selected mission:", mission);
   const activeTab = document.querySelector('.tab.active')?.textContent || '';
+  console.log("Active tab:", activeTab);
 
   const launcherEasting = Number(document.getElementById('launcher-easting').value);
   const launcherNorthing = Number(document.getElementById('launcher-northing').value);
   const launcherHeight = Number(document.getElementById('launcher-height').value);
+  console.log("Launcher coordinates:", launcherEasting, launcherNorthing, launcherHeight);
 
   let valid = true;
 
   if (activeTab.includes('Without Forward Observer')) {
+    console.log("Processing Without Forward Observer");
     const targetEasting = document.getElementById('target-easting');
     const targetNorthing = document.getElementById('target-northing');
     const targetHeight = document.getElementById('target-height');
 
     const paddedTargetEasting = padToFiveDigits(targetEasting.value);
     const paddedTargetNorthing = padToFiveDigits(targetNorthing.value);
+    console.log("Padded target easting:", paddedTargetEasting);
+    console.log("Padded target northing:", paddedTargetNorthing);
 
     if (paddedTargetEasting.length !== 5 || isNaN(paddedTargetEasting)) {
       document.getElementById('easting-error').textContent = "Must be a 5-digit number.";
@@ -419,6 +428,7 @@ function calculate() {
       mission.TargetEasting = paddedTargetEasting;
       mission.TargetNorthing = paddedTargetNorthing;
       mission.TargetHeight = targetHeight.value;
+      console.log("Calculating firing solutions for Without Forward Observer");
       mission.firingSolutions = main(
         launcherEasting,
         launcherNorthing,
@@ -430,10 +440,11 @@ function calculate() {
         gunParamsCurrent.drag,
         gunParamsCurrent.velocity
       );
-      mission.gunParams = { ...gunParamsCurrent }; // Store parameters for consistency
+      console.log("Firing solutions:", mission.firingSolutions);
       mission.HasPressedCalculate = true;
     }
   } else if (activeTab.includes('With Forward Observer')) {
+    console.log("Processing With Forward Observer");
     const observerEasting = document.getElementById('observer-easting');
     const observerNorthing = document.getElementById('observer-northing');
     const observerBearing = document.getElementById('observer-bearing');
@@ -442,6 +453,8 @@ function calculate() {
 
     const paddedObserverEasting = padToFiveDigits(observerEasting.value);
     const paddedObserverNorthing = padToFiveDigits(observerNorthing.value);
+    console.log("Padded observer easting:", paddedObserverEasting);
+    console.log("Padded observer northing:", paddedObserverNorthing);
 
     if (paddedObserverEasting.length !== 5 || isNaN(paddedObserverEasting)) {
       document.getElementById('observer-easting-error').textContent = "Must be a 5-digit number.";
@@ -486,6 +499,7 @@ function calculate() {
       mission.ObserverBearing = observerBearing.value;
       mission.ObserverRangeToTgt = observerRange.value;
       mission.ObserverAltitude = observerAltitude.value;
+      console.log("Calculating firing solutions for With Forward Observer");
       mission.firingSolutions = observerGridCalc(
         launcherNorthing,
         launcherEasting,
@@ -499,12 +513,13 @@ function calculate() {
         gunParamsCurrent.drag,
         gunParamsCurrent.velocity
       );
+      console.log("Firing solutions:", mission.firingSolutions);
       mission.TargetEasting = mission.firingSolutions.updatedEastingTarget;
       mission.TargetNorthing = mission.firingSolutions.updatedNorthingTarget;
-      mission.gunParams = { ...gunParamsCurrent }; // Store parameters for consistency
       mission.HasPressedCalculate = true;
     }
   } else if (activeTab.includes('Adjust Fire')) {
+    console.log("Processing Adjust Fire");
     const adjustFireBearing = document.getElementById('fire-adjustment-bearing');
     const adjustFireRange = document.getElementById('fire-adjustment-distance');
 
@@ -530,9 +545,9 @@ function calculate() {
       const adjustDistance = Number(adjustFireRange.value);
       const newTargetEasting = Number(mission.TargetEasting) + adjustDistance * Math.sin(bearingRad);
       const newTargetNorthing = Number(mission.TargetNorthing) + adjustDistance * Math.cos(bearingRad);
+      console.log("New target coordinates:", newTargetEasting, newTargetNorthing);
 
-      // Use the stored gun parameters for consistency within the mission
-      const gunParams = mission.gunParams || gunParamsCurrent; // Fallback to current if not set (shouldn't happen)
+      console.log("Calculating firing solutions for Adjust Fire");
       mission.firingSolutions = main(
         launcherEasting,
         launcherNorthing,
@@ -540,17 +555,17 @@ function calculate() {
         newTargetEasting,
         newTargetNorthing,
         Number(mission.TargetHeight || 0),
-        gunParams.mass,
-        gunParams.drag,
-        gunParams.velocity
+        gunParamsCurrent.mass,
+        gunParamsCurrent.drag,
+        gunParamsCurrent.velocity
       );
+      console.log("Firing solutions:", mission.firingSolutions);
 
       mission.TargetEasting = newTargetEasting.toFixed(0);
       mission.TargetNorthing = newTargetNorthing.toFixed(0);
 
       document.getElementById('adjust-new-easting').textContent = mission.TargetEasting;
       document.getElementById('adjust-new-northing').textContent = mission.TargetNorthing;
-      // mission.HasPressedCalculate remains true, no need to set again
     } else if (!mission.TargetEasting || !mission.TargetNorthing) {
       alert('No previous target data available for adjustment.');
       valid = false;
@@ -558,6 +573,7 @@ function calculate() {
   }
 
   if (valid) {
+    console.log("Updating UI with firing solutions");
     updateAdjustFireButton();
     displayFiringSolution();
     if (activeTab.includes('Adjust Fire')) {
@@ -567,6 +583,8 @@ function calculate() {
     } else if (activeTab.includes('With Forward Observer')) {
       showWithObserver();
     }
+  } else {
+    console.log("Validation failed");
   }
 }
 
