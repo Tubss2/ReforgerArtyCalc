@@ -566,6 +566,7 @@ function calculate() {
 
       document.getElementById('adjust-new-easting').textContent = mission.TargetEasting;
       document.getElementById('adjust-new-northing').textContent = mission.TargetNorthing;
+      mission.HasPressedCalculate = true;
     } else if (!mission.TargetEasting || !mission.TargetNorthing) {
       alert('No previous target data available for adjustment.');
       valid = false;
