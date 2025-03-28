@@ -27,6 +27,15 @@ let fireMissions = [{
 
 let selectedMissionIndex = 0;
 
+const gunParameters = {
+  'wz-m119': { mass: 23, drag: 0.0043, velocity: 212.5 },
+  'm252-0': { mass: 4.06, drag: 0.0004620, velocity: 66 },
+  'm252-1': { mass: 4.06, drag: 0.0004620, velocity: 101.046 },
+  'm252-2': { mass: 4.06, drag: 0.0004620, velocity: 137.61 },
+  'm252-3': { mass: 4.06, drag: 0.0004620, velocity: 167.706 },
+  'm252-4': { mass: 4.06, drag: 0.0004620, velocity: 196.482 }
+};
+
 // Define all functions first
 function start() {
   const launcherEasting = document.getElementById('initial-launcher-easting');
@@ -364,6 +373,8 @@ function padToFiveDigits(value) {
 }
 
 function calculate() {
+  const selectedGun = document.getElementById('select-gun').value;
+  const gunParamsCurrent = gunParameters[selectedGun];
   const mission = fireMissions[selectedMissionIndex];
   const activeTab = document.querySelector('.tab.active')?.textContent || '';
 
@@ -414,8 +425,12 @@ function calculate() {
         launcherHeight,
         Number(paddedTargetEasting),
         Number(paddedTargetNorthing),
-        Number(targetHeight.value)
+        Number(targetHeight.value),
+        gunParamsCurrent.mass,
+        gunParamsCurrent.drag,
+        gunParamsCurrent.velocity
       );
+      mission.gunParams = { ...gunParamsCurrent }; // Store parameters for consistency
       mission.HasPressedCalculate = true;
     }
   } else if (activeTab.includes('With Forward Observer')) {
@@ -479,10 +494,14 @@ function calculate() {
         Number(paddedObserverNorthing),
         Number(observerBearing.value),
         Number(observerRange.value),
-        Number(observerAltitude.value)
+        Number(observerAltitude.value),
+        gunParamsCurrent.mass,
+        gunParamsCurrent.drag,
+        gunParamsCurrent.velocity
       );
       mission.TargetEasting = mission.firingSolutions.updatedEastingTarget;
       mission.TargetNorthing = mission.firingSolutions.updatedNorthingTarget;
+      mission.gunParams = { ...gunParamsCurrent }; // Store parameters for consistency
       mission.HasPressedCalculate = true;
     }
   } else if (activeTab.includes('Adjust Fire')) {
@@ -512,21 +531,26 @@ function calculate() {
       const newTargetEasting = Number(mission.TargetEasting) + adjustDistance * Math.sin(bearingRad);
       const newTargetNorthing = Number(mission.TargetNorthing) + adjustDistance * Math.cos(bearingRad);
 
-      mission.TargetEasting = newTargetEasting.toFixed(0);
-      mission.TargetNorthing = newTargetNorthing.toFixed(0);
-
+      // Use the stored gun parameters for consistency within the mission
+      const gunParams = mission.gunParams || gunParamsCurrent; // Fallback to current if not set (shouldn't happen)
       mission.firingSolutions = main(
         launcherEasting,
         launcherNorthing,
         launcherHeight,
         newTargetEasting,
         newTargetNorthing,
-        Number(mission.TargetHeight || 0)
+        Number(mission.TargetHeight || 0),
+        gunParams.mass,
+        gunParams.drag,
+        gunParams.velocity
       );
+
+      mission.TargetEasting = newTargetEasting.toFixed(0);
+      mission.TargetNorthing = newTargetNorthing.toFixed(0);
 
       document.getElementById('adjust-new-easting').textContent = mission.TargetEasting;
       document.getElementById('adjust-new-northing').textContent = mission.TargetNorthing;
-      mission.HasPressedCalculate = true;
+      // mission.HasPressedCalculate remains true, no need to set again
     } else if (!mission.TargetEasting || !mission.TargetNorthing) {
       alert('No previous target data available for adjustment.');
       valid = false;

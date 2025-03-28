@@ -16,7 +16,7 @@
     <input type="text" id="initial-launcher-height" placeholder="Launcher Height (Meters)">
     <div class="error" id="initial-height-error"></div>
     <button onclick="start()">Start</button>
-    <div id="version-number">v1.1.0</div> <!-- Paste this line here -->
+    <div id="version-number">v1.2</div> <!-- Paste this line here -->
   </div>
 
   <div class="container" id="main-container">
@@ -33,7 +33,13 @@
       <div>
         <label for="select-gun">Select Gun: </label>
         <select id="select-gun">
-          <option value="WZ turrets M119">WZ turrets M119</option>
+          <option value="wz-m119">WZ turrets M119</option>
+          <option value="m252-0">M252 0 ring</option>
+          <option value="m252-1">M252 1 ring</option>
+          <option value="m252-2">M252 2 ring</option>
+          <option value="m252-3">M252 3 ring</option>
+          <option value="m252-4">M252 4 ring</option>
+        </select>
         </select>
       </div>
     </div>
@@ -50,9 +56,9 @@
 
       <div class="fire-modes">
         <div class="tabs">
-          <button class="tab" onclick="showWithoutObserver()">Without Forward Observer</button>
-          <button class="tab" onclick="showWithObserver()">With Forward Observer</button>
-          <button class="tab adjust-fire" id="adjust-fire-btn">Adjust Fire</button>
+          <button class="tab" onclick="showWithoutObserver()">Grid</button>
+          <button class="tab" onclick="showWithObserver()">Adjust</button>
+          <button class="tab adjust-fire" id="adjust-fire-btn">Advanced Adjust</button>
         </div>
 
         <div class="inputs-container" id="inputs-container"></div>

@@ -119,31 +119,32 @@ function main(eastingLauncher, northingLauncher, heightLauncher,
 }
 
 // Observer function (unchanged)
-function observerGridCalc(northingLauncher, eastingLauncher, heightLauncher,
-                          eastingObserver, northingObserver, observerBearingToTarget, observerRangeToTarget, heightTarget) {
-    const bearingRad = observerBearingToTarget * (Math.PI / 180);
-    const eastingTarget = eastingObserver + observerRangeToTarget * Math.sin(bearingRad);
-    const northingTarget = northingObserver + observerRangeToTarget * Math.cos(bearingRad);
+function observerGridCalc(northingLauncher, eastingLauncher, heightLauncher, eastingObserver, northingObserver, observerBearingToTarget, observerRangeToTarget, heightTarget,
+    projectileMass = 23, projectileAirDrag = 0.0043, projectileVelocity = 212.5) {
+const bearingRad = observerBearingToTarget * (Math.PI / 180);
+const eastingTarget = eastingObserver + observerRangeToTarget * Math.sin(bearingRad);
+const northingTarget = northingObserver + observerRangeToTarget * Math.cos(bearingRad);
 
-    const {
-        horizontalDistance,
-        bearingDeg,
-        milsIndirect,
-        tofIndirect,
-        milsDirect,
-        tofDirect
-    } = main(eastingLauncher, northingLauncher, heightLauncher, eastingTarget, northingTarget, heightTarget);
+const {
+horizontalDistance,
+bearingDeg,
+milsIndirect,
+tofIndirect,
+milsDirect,
+tofDirect
+} = main(eastingLauncher, northingLauncher, heightLauncher, eastingTarget, northingTarget, heightTarget,
+projectileMass, projectileAirDrag, projectileVelocity);
 
-    return {
-        horizontalDistance,
-        bearingDeg,
-        milsIndirect,
-        tofIndirect,
-        milsDirect,
-        tofDirect,
-        updatedEastingTarget: eastingTarget,
-        updatedNorthingTarget: northingTarget
-    };
+return {
+horizontalDistance,
+bearingDeg,
+milsIndirect,
+tofIndirect,
+milsDirect,
+tofDirect,
+updatedEastingTarget: eastingTarget,
+updatedNorthingTarget: northingTarget
+};
 }
 
 export { main, observerGridCalc };
