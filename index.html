@@ -16,7 +16,7 @@
     <input type="text" id="initial-launcher-height" placeholder="Launcher Height (Meters)">
     <div class="error" id="initial-height-error"></div>
     <button onclick="start()">Start</button>
-    <div id="version-number">v1.2</div> <!-- Paste this line here -->
+    <div id="version-number">v1.2.1</div> <!-- Paste this line here -->
   </div>
 
   <div class="container" id="main-container">
@@ -56,9 +56,9 @@
 
       <div class="fire-modes">
         <div class="tabs">
-          <button class="tab" onclick="showWithoutObserver()">Grid</button>
-          <button class="tab" onclick="showWithObserver()">Adjust</button>
-          <button class="tab adjust-fire" id="adjust-fire-btn">Advanced Adjust</button>
+          <button class="tab" onclick="showWithoutObserver()">Without Forward Observer</button>
+          <button class="tab" onclick="showWithObserver()">With Forward Observer</button>
+          <button class="tab adjust-fire" id="adjust-fire-btn">Adjust Fire</button>
         </div>
 
         <div class="inputs-container" id="inputs-container"></div>
