@@ -603,6 +603,7 @@ function displayFiringSolution() {
     <div>Direct Elevation: ${directMils || '0'} Mils<br>TOF: ${solution.tofDirect || '00.00'} seconds</div>
   `; // Added closing backtick and semicolon
 } // Added closing brace
+
 // Attach all functions to window AFTER they are defined
 window.start = start;
 window.addNewMission = addNewMission;
