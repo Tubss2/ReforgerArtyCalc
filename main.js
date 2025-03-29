@@ -589,19 +589,6 @@ function calculate() {
   }
 }
 
-function displayFiringSolution() {
-  const mission = fireMissions[selectedMissionIndex];
-  const solution = mission.firingSolutions || {};
-  let bearingMils = Math.round((solution.bearingDeg || 0) * (6400 / 360));
-  let indirectMils = Math.round(solution.milsIndirect || 0);
-  let directMils = Math.round(solution.milsDirect || 0);
-  document.querySelector('.firing-solution').innerHTML = `
-  <div>Range: ${solution.horizontalDistance?.toFixed(2) || '00'} meters<br>Bearing: ${bearingMils || '0'} Mils</div>
-  <div class="vertical-line"></div>
-  <div>Indirect Elevation: ${indirectMils || '0'} Mils<br>TOF: ${solution.tofIndirect || '00.00'} seconds</div>
-  <div class="vertical-line"></div>
-  <div>Direct Elevation: ${directMils || '0'} Mils<br>TOF: ${solution.tofDirect || '00.00'} seconds</div>
-}
 
 // Attach all functions to window AFTER they are defined
 window.start = start;
