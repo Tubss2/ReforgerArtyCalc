@@ -592,19 +592,20 @@ function calculate() {
 function displayFiringSolution() {
   const mission = fireMissions[selectedMissionIndex];
   const solution = mission.firingSolutions || {};
-  let bearingMils = Math.round((solution.bearingDeg || 0) * (6400 / 360));
-  let indirectMils = Math.round(solution.milsIndirect || 0);
-  let directMils = Math.round(solution.milsDirect || 0);
+  let degreesIndirect = (solution.milsIndirect || 0) * (360 / 6400);
+  let degreesDirect = (solution.milsDirect || 0) * (360 / 6400);
+  if (degreesIndirect > 60) {
+    degreesIndirect += 0.4;
+  }
   document.querySelector('.firing-solution').innerHTML = `
-    <div>Range: ${solution.horizontalDistance?.toFixed(2) || '00'} meters<br>Bearing: ${bearingMils || '0'} Mils</div>
+    <div>Range: ${solution.horizontalDistance?.toFixed(2) || '00'}<br>Bearing: ${solution.bearingDeg || '00.00'}</div>
     <div class="vertical-line"></div>
-    <div>Indirect Elevation: ${indirectMils || '0'} Mils<br>TOF: ${solution.tofIndirect || '00.00'} seconds</div>
+    <div>Indirect Deg: ${degreesIndirect.toFixed(2) || '00.00'}<br>TOF: ${solution.tofIndirect || '00.00'}</div>
     <div class="vertical-line"></div>
-    <div>Direct Elevation: ${directMils || '0'} Mils<br>TOF: ${solution.tofDirect || '00.00'} seconds</div>
-  `; // Added closing backtick and semicolon
-} // Added closing brace
-// Attach all functions to window AFTER they are defined
-window.start = start;
+    <div>Direct Deg: ${degreesDirect.toFixed(2) || '00.00'}<br>TOF: ${solution.tofDirect || '00.00'}</div>
+  `;
+}
+
 window.addNewMission = addNewMission;
 window.renameMission = renameMission;
 window.deleteMission = deleteMission;
