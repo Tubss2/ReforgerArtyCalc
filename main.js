@@ -425,6 +425,8 @@ function calculate() {
     }
 
     if (valid) {
+      console.log("Launcher:", launcherEasting, launcherNorthing);
+     console.log("Target:", paddedTargetEasting, paddedTargetNorthing);
       mission.TargetEasting = paddedTargetEasting;
       mission.TargetNorthing = paddedTargetNorthing;
       mission.TargetHeight = targetHeight.value;
