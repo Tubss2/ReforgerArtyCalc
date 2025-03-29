@@ -596,13 +596,13 @@ function displayFiringSolution() {
   let indirectMils = Math.round(solution.milsIndirect || 0);
   let directMils = Math.round(solution.milsDirect || 0);
   document.querySelector('.firing-solution').innerHTML = `
-  <div>Range: ${solution.horizontalDistance?.toFixed(2) || '00'} meters<br>Bearing: ${bearingMils || '0'} Mils</div>
-  <div class="vertical-line"></div>
-  <div>Indirect Elevation: ${indirectMils || '0'} Mils<br>TOF: ${solution.tofIndirect || '00.00'} seconds</div>
-  <div class="vertical-line"></div>
-  <div>Direct Elevation: ${directMils || '0'} Mils<br>TOF: ${solution.tofDirect || '00.00'} seconds</div>
-}
-
+    <div>Range: ${solution.horizontalDistance?.toFixed(2) || '00'} meters<br>Bearing: ${bearingMils || '0'} Mils</div>
+    <div class="vertical-line"></div>
+    <div>Indirect Elevation: ${indirectMils || '0'} Mils<br>TOF: ${solution.tofIndirect || '00.00'} seconds</div>
+    <div class="vertical-line"></div>
+    <div>Direct Elevation: ${directMils || '0'} Mils<br>TOF: ${solution.tofDirect || '00.00'} seconds</div>
+  `; // Added closing backtick and semicolon
+} // Added closing brace
 // Attach all functions to window AFTER they are defined
 window.start = start;
 window.addNewMission = addNewMission;
