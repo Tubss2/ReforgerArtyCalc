@@ -637,4 +637,4 @@ window.onload = function () {
   });
 
   updateAdjustFireButton();
-};
+}
