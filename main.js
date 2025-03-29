@@ -601,7 +601,7 @@ function displayFiringSolution() {
   <div>Indirect Elevation: ${indirectMils || '0'} Mils<br>TOF: ${solution.tofIndirect || '00.00'} seconds</div>
   <div class="vertical-line"></div>
   <div>Direct Elevation: ${directMils || '0'} Mils<br>TOF: ${solution.tofDirect || '00.00'} seconds</div>
-`;
+}
 
 // Attach all functions to window AFTER they are defined
 window.start = start;
@@ -637,4 +637,4 @@ window.onload = function () {
   });
 
   updateAdjustFireButton();
-}
+};
