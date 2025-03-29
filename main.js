@@ -606,6 +606,7 @@ function displayFiringSolution() {
   `;
 }
 
+window.start = start;
 window.addNewMission = addNewMission;
 window.renameMission = renameMission;
 window.deleteMission = deleteMission;
