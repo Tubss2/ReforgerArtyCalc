@@ -28,7 +28,7 @@ let fireMissions = [{
 let selectedMissionIndex = 0;
 
 const gunParameters = {
-  'wz-m119': { mass: 23, drag: 0.0043, velocity: 212.5 },
+  'wz-m119': { mass: 23, drag: 0.0008, velocity: 240 },
   'm252-0': { mass: 4.06, drag: 0.0004620, velocity: 66 },
   'm252-1': { mass: 4.06, drag: 0.0004620, velocity: 101.046 },
   'm252-2': { mass: 4.06, drag: 0.0004620, velocity: 137.61 },
