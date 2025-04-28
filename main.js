@@ -90,6 +90,7 @@ function showAdjustFire() {
   }
 
   const calculateButtonDisabled = mission.HasPressedCalculate ? '' : 'disabled';
+  const observerBearing = mission.ObserverBearing !== null ? mission.ObserverBearing : '0'; // Default to 0 if not set
 
   document.getElementById('inputs-container').innerHTML = `
     <div style="float: left; width: 50%;">
@@ -107,22 +108,32 @@ function showAdjustFire() {
       <div id="spread-adjustment-text" style="margin-top: 10px;">${spreadText}</div>
     </div>
     <div style="clear: both;"></div>
-    <div class="adjust-fire-buttons" style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
-      <div style="display: flex; justify-content: center; gap: 10px;">
+    <div class="adjust-fire-buttons" style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 20px;">
+      <!-- Top: Add 50 and Add 10 (vertical) -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
         <button id="add-50-btn" ${calculateButtonDisabled}>Add 50</button>
         <button id="add-10-btn" ${calculateButtonDisabled}>Add 10</button>
       </div>
-      <div style="display: flex; justify-content: center; gap: 100px; margin: 10px 0;">
-        <div style="display: flex; flex-direction: column; gap: 10px;">
+      <!-- Middle: Left (horizontal), Obs Brg, Right (horizontal) -->
+      <div style="display: flex; justify-content: center; align-items: center; gap: 50px;">
+        <!-- Left: Left 50 and Left 10 (horizontal) -->
+        <div style="display: flex; gap: 10px;">
           <button id="left-50-btn" ${calculateButtonDisabled}>Left 50</button>
           <button id="left-10-btn" ${calculateButtonDisabled}>Left 10</button>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Center: Obs Brg -->
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <label for="obs-bearing-display">Obs Brg</label>
+          <input type="text" id="obs-bearing-display" value="${observerBearing}" readonly style="width: 60px; text-align: center;">
+        </div>
+        <!-- Right: Right 10 and Right 50 (horizontal) -->
+        <div style="display: flex; gap: 10px;">
           <button id="right-10-btn" ${calculateButtonDisabled}>Right 10</button>
           <button id="right-50-btn" ${calculateButtonDisabled}>Right 50</button>
         </div>
       </div>
-      <div style="display: flex; justify-content: center; gap: 10px;">
+      <!-- Bottom: Drop 10 and Drop 50 (vertical) -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
         <button id="drop-10-btn" ${calculateButtonDisabled}>Drop 10</button>
         <button id="drop-50-btn" ${calculateButtonDisabled}>Drop 50</button>
       </div>
@@ -146,7 +157,6 @@ function showAdjustFire() {
   if (mission.HasPressedCalculate) {
     calcAdjustBtn.addEventListener('click', calculate);
     calcSpreadBtn.addEventListener('click', calculateSpread);
-    // Placeholder event listeners for new buttons (functionality TBD)
     add50Btn.addEventListener('click', () => console.log('Add 50 clicked'));
     add10Btn.addEventListener('click', () => console.log('Add 10 clicked'));
     left50Btn.addEventListener('click', () => console.log('Left 50 clicked'));
@@ -158,7 +168,6 @@ function showAdjustFire() {
   } else {
     calcAdjustBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     calcSpreadBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    // Disable new buttons with alerts
     add50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     add10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     left50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
@@ -169,7 +178,6 @@ function showAdjustFire() {
     drop50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
   }
 }
-
 function calculateSpread() {
   const mission = fireMissions[selectedMissionIndex];
   const spreadInput = document.getElementById('manual-spread');
