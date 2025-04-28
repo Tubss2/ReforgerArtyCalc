@@ -90,76 +90,89 @@ function showAdjustFire() {
   }
 
   const calculateButtonDisabled = mission.HasPressedCalculate ? '' : 'disabled';
-  const observerBearing = mission.ObserverBearing !== null ? mission.ObserverBearing : '0'; // Default to 0 if not set
+  const observerBearing = mission.ObserverBearing !== null ? mission.ObserverBearing : '0';
 
   document.getElementById('inputs-container').innerHTML = `
-    <!-- Centered New Target Grid -->
+    <!-- New Target Grid -->
     <div style="text-align: center; margin-bottom: 20px;">
-      <div>New Target Grid (after adjustment):</div>
-      <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting || 'N/A'}</span></div>
-      <div>Northing: <span id="adjust-new-northing">${mission.TargetNorthing || 'N/A'}</span></div>
+      <div style="color: #FFFFFF;">New Target Grid (after adjustment):</div>
+      <div>Easting: <span id="adjust-new-easting" style="color: #FFA500;">${mission.TargetEasting || 'N/A'}</span></div>
+      <div>Northing: <span id="adjust-new-northing" style="color: #FFA500;">${mission.TargetNorthing || 'N/A'}</span></div>
     </div>
 
-    <!-- Adjust Fire Buttons Layout -->
+    <!-- Adjust Fire Buttons -->
     <div class="adjust-fire-buttons" style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 20px;">
-      <!-- Top: Add Input and Buttons -->
+      <!-- Add Section -->
       <div style="display: flex; flex-direction: column; align-items: center;">
-        <label for="add-input">Add</label>
-        <input type="text" id="add-input" value="0" readonly style="width: 60px; text-align: center; margin-bottom: 10px;">
+        <label for="add-input" style="color: #FFFFFF;">Add</label>
+        <input type="text" id="add-input" value="0" readonly style="width: 60px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px; margin-bottom: 10px;">
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button id="add-50-btn" ${calculateButtonDisabled}>Add 50</button>
-          <button id="add-10-btn" ${calculateButtonDisabled}>Add 10</button>
+          <button id="add-50-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Add 50</button>
+          <button id="add-10-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Add 10</button>
         </div>
       </div>
 
-      <!-- Middle: Left, Obs Brg (Center), Right -->
+      <!-- Left, Obs Brg, Right Section -->
       <div style="display: flex; justify-content: center; align-items: center; gap: 50px;">
-        <!-- Left: Left Input and Buttons -->
+        <!-- Left -->
         <div style="display: flex; flex-direction: column; align-items: center;">
-          <label for="left-input">Left</label>
-          <input type="text" id="left-input" value="0" readonly style="width: 60px; text-align: center; margin-bottom: 10px;">
+          <label for="left-input" style="color: #FFFFFF;">Left</label>
+          <input type="text" id="left-input" value="0" readonly style="width: 60px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px; margin-bottom: 10px;">
           <div style="display: flex; gap: 10px;">
-            <button id="left-50-btn" ${calculateButtonDisabled}>Left 50</button>
-            <button id="left-10-btn" ${calculateButtonDisabled}>Left 10</button>
+            <button id="left-50-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Left 50</button>
+            <button id="left-10-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Left 10</button>
           </div>
         </div>
 
-        <!-- Center: Obs Brg (Editable) -->
+        <!-- Obs Brg -->
         <div style="display: flex; flex-direction: column; align-items: center;">
-          <label for="obs-bearing-input">Obs Brg</label>
-          <input type="text" id="obs-bearing-input" value="${observerBearing}" style="width: 60px; text-align: center;">
+          <label for="obs-bearing-input" style="color: #FFFFFF;">Obs Brg</label>
+          <input type="text" id="obs-bearing-input" value="${observerBearing}" style="width: 60px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px;">
         </div>
 
-        <!-- Right: Right Input and Buttons -->
+        <!-- Right -->
         <div style="display: flex; flex-direction: column; align-items: center;">
-          <label for="right-input">Right</label>
-          <input type="text" id="right-input" value="0" readonly style="width: 60px; text-align: center; margin-bottom: 10px;">
+          <label for="right-input" style="color: #FFFFFF;">Right</label>
+          <input type="text" id="right-input" value="0" readonly style="width: 60px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px; margin-bottom: 10px;">
           <div style="display: flex; gap: 10px;">
-            <button id="right-10-btn" ${calculateButtonDisabled}>Right 10</button>
-            <button id="right-50-btn" ${calculateButtonDisabled}>Right 50</button>
+            <button id="right-10-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Right 10</button>
+            <button id="right-50-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Right 50</button>
           </div>
         </div>
       </div>
 
-      <!-- Bottom: Drop Input and Buttons -->
+      <!-- Drop Section -->
       <div style="display: flex; flex-direction: column; align-items: center;">
-        <label for="drop-input">Drop</label>
-        <input type="text" id="drop-input" value="0" readonly style="width: 60px; text-align: center; margin-bottom: 10px;">
+        <label for="drop-input" style="color: #FFFFFF;">Drop</label>
+        <input type="text" id="drop-input" value="0" readonly style="width: 60px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px; margin-bottom: 10px;">
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button id="drop-10-btn" ${calculateButtonDisabled}>Drop 10</button>
-          <button id="drop-50-btn" ${calculateButtonDisabled}>Drop 50</button>
+          <button id="drop-10-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Drop 10</button>
+          <button id="drop-50-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Drop 50</button>
         </div>
       </div>
     </div>
 
-    <!-- Manual Spread and Calculate Buttons -->
-    <div style="text-align: center; margin-top: 20px;">
-      <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)">
-      <button id="calculate-spread-btn" style="margin-top: 10px;" ${calculateButtonDisabled}>Calculate Spread</button>
-      <div id="spread-adjustment-text" style="margin-top: 10px;">${spreadText}</div>
+    <!-- Bearing and Range Adjust Fire -->
+    <div style="margin-top: 20px; text-align: center;">
+      <div style="margin-bottom: 10px;">
+        <label for="bearing-adjust" style="color: #FFFFFF;">Bearing Adjust (°)</label>
+        <input type="text" id="bearing-adjust" placeholder="Enter bearing" style="width: 100px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px;">
+      </div>
+      <div>
+        <label for="range-adjust" style="color: #FFFFFF;">Range Adjust (m)</label>
+        <input type="text" id="range-adjust" placeholder="Enter range" style="width: 100px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px;">
+      </div>
     </div>
-    <div class="calculate-button">
-      <button id="calculate-adjustment-btn" ${calculateButtonDisabled}>Calculate Adjustment</button>
+
+    <!-- Manual Spread and Calculate Spread -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+      <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)" style="flex: 1; margin-right: 10px; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px;">
+      <button id="calculate-spread-btn" ${calculateButtonDisabled} style="background-color: #66BB83; color: #161C1A; border: none; padding: 10px 20px; cursor: pointer;">Calculate Spread</button>
+    </div>
+
+    <!-- Calculate Adjustment -->
+    <div style="text-align: center; margin-top: 20px;">
+      <button id="calculate-adjustment-btn" ${calculateButtonDisabled} style="background-color: #66BB83; color: #161C1A; border: none; padding: 10px 20px; cursor: pointer;">Calculate Adjustment</button>
     </div>
   `;
 
