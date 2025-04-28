@@ -90,98 +90,76 @@ function showAdjustFire() {
   }
 
   const calculateButtonDisabled = mission.HasPressedCalculate ? '' : 'disabled';
-  const observerBearing = mission.ObserverBearing !== null ? mission.ObserverBearing : '0';
+  const observerBearing = mission.ObserverBearing !== null ? mission.ObserverBearing : '0'; // Default to 0 if not set
+
+  // Initialize cumulative adjustment values (placeholders for now)
+  const cumulativeAdd = 0;
+  const cumulativeDrop = 0;
+  const cumulativeLeft = 0;
+  const cumulativeRight = 0;
 
   document.getElementById('inputs-container').innerHTML = `
-    <!-- New Target Grid -->
-    <div style="text-align: center; margin-bottom: 20px;">
-      <div style="color: #FFFFFF;">New Target Grid (after adjustment):</div>
-      <div>Easting: <span id="adjust-new-easting" style="color: #FFA500;">${mission.TargetEasting || 'N/A'}</span></div>
-      <div>Northing: <span id="adjust-new-northing" style="color: #FFA500;">${mission.TargetNorthing || 'N/A'}</span></div>
+    <!-- Left Side: Adjustment Inputs -->
+    <div style="float: left; width: 50%;">
+      <div>New Target Grid (after adjustment):</div>
+      <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting || 'N/A'}</span></div>
+      <div>Northing: <span id="adjust-new-northing">${mission.TargetNorthing || 'N/A'}</span></div>
+      <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
+      <div class="error" id="adjustment-bearing-error"></div>
+      <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
+      <div class="error" id="adjustment-range-error"></div>
     </div>
-
-    <!-- Adjust Fire Buttons -->
-    <div class="adjust-fire-buttons" style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 20px;">
-      <!-- Add Section -->
-      <div style="display: flex; flex-direction: column; align-items: center;">
-        <label for="add-input" style="color: #FFFFFF;">Add</label>
-        <input type="text" id="add-input" value="0" readonly style="width: 60px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px; margin-bottom: 10px;">
+    <!-- Right Side: Spread Inputs -->
+    <div style="float: right; width: 50%; text-align: right;">
+      <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)">
+      <button id="calculate-spread-btn" style="margin-top: 10px;" ${calculateButtonDisabled}>Calculate Spread</button>
+      <div id="spread-adjustment-text" style="margin-top: 10px;">${spreadText}</div>
+    </div>
+    <div style="clear: both;"></div>
+    <!-- Center Section: Adjustment Buttons and Inputs -->
+    <div class="adjust-fire-buttons" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px;">
+      <!-- Left Section: Left Input and Buttons -->
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <input type="text" id="left-input" value="${cumulativeLeft}" readonly style="width: 50px; text-align: center;" placeholder="Left">
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button id="add-50-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Add 50</button>
-          <button id="add-10-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Add 10</button>
+          <button id="left-50-btn" ${calculateButtonDisabled}>Left 50</button>
+          <button id="left-10-btn" ${calculateButtonDisabled}>Left 10</button>
         </div>
       </div>
-
-      <!-- Left, Obs Brg, Right Section -->
-      <div style="display: flex; justify-content: center; align-items: center; gap: 50px;">
-        <!-- Left -->
-        <div style="display: flex; flex-direction: column; align-items: center;">
-          <label for="left-input" style="color: #FFFFFF;">Left</label>
-          <input type="text" id="left-input" value="0" readonly style="width: 60px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px; margin-bottom: 10px;">
-          <div style="display: flex; gap: 10px;">
-            <button id="left-50-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Left 50</button>
-            <button id="left-10-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Left 10</button>
-          </div>
-        </div>
-
-        <!-- Obs Brg -->
-        <div style="display: flex; flex-direction: column; align-items: center;">
-          <label for="obs-bearing-input" style="color: #FFFFFF;">Obs Brg</label>
-          <input type="text" id="obs-bearing-input" value="${observerBearing}" style="width: 60px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px;">
-        </div>
-
-        <!-- Right -->
-        <div style="display: flex; flex-direction: column; align-items: center;">
-          <label for="right-input" style="color: #FFFFFF;">Right</label>
-          <input type="text" id="right-input" value="0" readonly style="width: 60px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px; margin-bottom: 10px;">
-          <div style="display: flex; gap: 10px;">
-            <button id="right-10-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Right 10</button>
-            <button id="right-50-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Right 50</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Drop Section -->
-      <div style="display: flex; flex-direction: column; align-items: center;">
-        <label for="drop-input" style="color: #FFFFFF;">Drop</label>
-        <input type="text" id="drop-input" value="0" readonly style="width: 60px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px; margin-bottom: 10px;">
+      <!-- Center Section: Add, Obs Brg, Drop -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <input type="text" id="add-input" value="${cumulativeAdd}" readonly style="width: 50px; text-align: center;" placeholder="Add">
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button id="drop-10-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Drop 10</button>
-          <button id="drop-50-btn" ${calculateButtonDisabled} style="background-color: #FFFFFF; color: #000000; border: none; padding: 5px 10px; cursor: pointer;">Drop 50</button>
+          <button id="add-50-btn" ${calculateButtonDisabled}>Add 50</button>
+          <button id="add-10-btn" ${calculateButtonDisabled}>Add 10</button>
         </div>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <label for="obs-bearing-input">Obs Brg</label>
+          <input type="text" id="obs-bearing-input" value="${observerBearing}" style="width: 60px; text-align: center;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button id="drop-10-btn" ${calculateButtonDisabled}>Drop 10</button>
+          <button id="drop-50-btn" ${calculateButtonDisabled}>Drop 50</button>
+        </div>
+        <input type="text" id="drop-input" value="${cumulativeDrop}" readonly style="width: 50px; text-align: center;" placeholder="Drop">
+      </div>
+      <!-- Right Section: Right Buttons and Input -->
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button id="right-10-btn" ${calculateButtonDisabled}>Right 10</button>
+          <button id="right-50-btn" ${calculateButtonDisabled}>Right 50</button>
+        </div>
+        <input type="text" id="right-input" value="${cumulativeRight}" readonly style="width: 50px; text-align: center;" placeholder="Right">
       </div>
     </div>
-
-    <!-- Bearing and Range Adjust Fire -->
-    <div style="margin-top: 20px; text-align: center;">
-      <div style="margin-bottom: 10px;">
-        <label for="bearing-adjust" style="color: #FFFFFF;">Bearing Adjust (°)</label>
-        <input type="text" id="bearing-adjust" placeholder="Enter bearing" style="width: 100px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px;">
-      </div>
-      <div>
-        <label for="range-adjust" style="color: #FFFFFF;">Range Adjust (m)</label>
-        <input type="text" id="range-adjust" placeholder="Enter range" style="width: 100px; text-align: center; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px;">
-      </div>
-    </div>
-
-    <!-- Manual Spread and Calculate Spread -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-      <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)" style="flex: 1; margin-right: 10px; background-color: #161C1A; color: #FFFFFF; border: 1px solid #66BB83; padding: 5px;">
-      <button id="calculate-spread-btn" ${calculateButtonDisabled} style="background-color: #66BB83; color: #161C1A; border: none; padding: 10px 20px; cursor: pointer;">Calculate Spread</button>
-    </div>
-
-    <!-- Calculate Adjustment -->
-    <div style="text-align: center; margin-top: 20px;">
-      <button id="calculate-adjustment-btn" ${calculateButtonDisabled} style="background-color: #66BB83; color: #161C1A; border: none; padding: 10px 20px; cursor: pointer;">Calculate Adjustment</button>
+    <div class="calculate-button">
+      <button id="calculate-adjustment-btn" ${calculateButtonDisabled}>Calculate Adjustment</button>
     </div>
   `;
 
-  // Get references to input boxes and buttons
-  const addInput = document.getElementById('add-input');
-  const leftInput = document.getElementById('left-input');
-  const rightInput = document.getElementById('right-input');
-  const dropInput = document.getElementById('drop-input');
-  const obsBearingInput = document.getElementById('obs-bearing-input');
+  // Get DOM elements for event listeners
+  const calcAdjustBtn = document.getElementById('calculate-adjustment-btn');
+  const calcSpreadBtn = document.getElementById('calculate-spread-btn');
   const add50Btn = document.getElementById('add-50-btn');
   const add10Btn = document.getElementById('add-10-btn');
   const left50Btn = document.getElementById('left-50-btn');
@@ -190,39 +168,60 @@ function showAdjustFire() {
   const right50Btn = document.getElementById('right-50-btn');
   const drop10Btn = document.getElementById('drop-10-btn');
   const drop50Btn = document.getElementById('drop-50-btn');
-  const calcAdjustBtn = document.getElementById('calculate-adjustment-btn');
-  const calcSpreadBtn = document.getElementById('calculate-spread-btn');
+  const obsBearingInput = document.getElementById('obs-bearing-input');
+  const addInput = document.getElementById('add-input');
+  const leftInput = document.getElementById('left-input');
+  const rightInput = document.getElementById('right-input');
+  const dropInput = document.getElementById('drop-input');
 
   if (mission.HasPressedCalculate) {
-    // Add functionality to buttons
-    add50Btn.addEventListener('click', () => {
-      addInput.value = Number(addInput.value) + 50;
-    });
-    add10Btn.addEventListener('click', () => {
-      addInput.value = Number(addInput.value) + 10;
-    });
-    left50Btn.addEventListener('click', () => {
-      leftInput.value = Number(leftInput.value) + 50;
-    });
-    left10Btn.addEventListener('click', () => {
-      leftInput.value = Number(leftInput.value) + 10;
-    });
-    right10Btn.addEventListener('click', () => {
-      rightInput.value = Number(rightInput.value) + 10;
-    });
-    right50Btn.addEventListener('click', () => {
-      rightInput.value = Number(rightInput.value) + 50;
-    });
-    drop10Btn.addEventListener('click', () => {
-      dropInput.value = Number(dropInput.value) + 10;
-    });
-    drop50Btn.addEventListener('click', () => {
-      dropInput.value = Number(dropInput.value) + 50;
-    });
     calcAdjustBtn.addEventListener('click', calculate);
     calcSpreadBtn.addEventListener('click', calculateSpread);
+    // Add event listeners for adjustment buttons
+    add50Btn.addEventListener('click', () => {
+      const currentAdd = Number(addInput.value) || 0;
+      addInput.value = currentAdd + 50;
+      console.log('Add 50 clicked, cumulative add:', addInput.value);
+    });
+    add10Btn.addEventListener('click', () => {
+      const currentAdd = Number(addInput.value) || 0;
+      addInput.value = currentAdd + 10;
+      console.log('Add 10 clicked, cumulative add:', addInput.value);
+    });
+    left50Btn.addEventListener('click', () => {
+      const currentLeft = Number(leftInput.value) || 0;
+      leftInput.value = currentLeft + 50;
+      console.log('Left 50 clicked, cumulative left:', leftInput.value);
+    });
+    left10Btn.addEventListener('click', () => {
+      const currentLeft = Number(leftInput.value) || 0;
+      leftInput.value = currentLeft + 10;
+      console.log('Left 10 clicked, cumulative left:', leftInput.value);
+    });
+    right10Btn.addEventListener('click', () => {
+      const currentRight = Number(rightInput.value) || 0;
+      rightInput.value = currentRight + 10;
+      console.log('Right 10 clicked, cumulative right:', rightInput.value);
+    });
+    right50Btn.addEventListener('click', () => {
+      const currentRight = Number(rightInput.value) || 0;
+      rightInput.value = currentRight + 50;
+      console.log('Right 50 clicked, cumulative right:', rightInput.value);
+    });
+    drop10Btn.addEventListener('click', () => {
+      const currentDrop = Number(dropInput.value) || 0;
+      dropInput.value = currentDrop + 10;
+      console.log('Drop 10 clicked, cumulative drop:', dropInput.value);
+    });
+    drop50Btn.addEventListener('click', () => {
+      const currentDrop = Number(dropInput.value) || 0;
+      dropInput.value = currentDrop + 50;
+      console.log('Drop 50 clicked, cumulative drop:', dropInput.value);
+    });
   } else {
-    // Disable buttons with alerts
+    calcAdjustBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    calcSpreadBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    // Disable new buttons with alerts
     add50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     add10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     left50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
@@ -231,8 +230,6 @@ function showAdjustFire() {
     right50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     drop10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     drop50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    calcAdjustBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    calcSpreadBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
   }
 }
 function calculateSpread() {
