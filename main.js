@@ -107,6 +107,26 @@ function showAdjustFire() {
       <div id="spread-adjustment-text" style="margin-top: 10px;">${spreadText}</div>
     </div>
     <div style="clear: both;"></div>
+    <div class="adjust-fire-buttons" style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
+      <div style="display: flex; justify-content: center; gap: 10px;">
+        <button id="add-50-btn" ${calculateButtonDisabled}>Add 50</button>
+        <button id="add-10-btn" ${calculateButtonDisabled}>Add 10</button>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 100px; margin: 10px 0;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button id="left-50-btn" ${calculateButtonDisabled}>Left 50</button>
+          <button id="left-10-btn" ${calculateButtonDisabled}>Left 10</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button id="right-10-btn" ${calculateButtonDisabled}>Right 10</button>
+          <button id="right-50-btn" ${calculateButtonDisabled}>Right 50</button>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 10px;">
+        <button id="drop-10-btn" ${calculateButtonDisabled}>Drop 10</button>
+        <button id="drop-50-btn" ${calculateButtonDisabled}>Drop 50</button>
+      </div>
+    </div>
     <div class="calculate-button">
       <button id="calculate-adjustment-btn" ${calculateButtonDisabled}>Calculate Adjustment</button>
     </div>
@@ -114,13 +134,39 @@ function showAdjustFire() {
 
   const calcAdjustBtn = document.getElementById('calculate-adjustment-btn');
   const calcSpreadBtn = document.getElementById('calculate-spread-btn');
-  
+  const add50Btn = document.getElementById('add-50-btn');
+  const add10Btn = document.getElementById('add-10-btn');
+  const left50Btn = document.getElementById('left-50-btn');
+  const left10Btn = document.getElementById('left-10-btn');
+  const right10Btn = document.getElementById('right-10-btn');
+  const right50Btn = document.getElementById('right-50-btn');
+  const drop10Btn = document.getElementById('drop-10-btn');
+  const drop50Btn = document.getElementById('drop-50-btn');
+
   if (mission.HasPressedCalculate) {
     calcAdjustBtn.addEventListener('click', calculate);
     calcSpreadBtn.addEventListener('click', calculateSpread);
+    // Placeholder event listeners for new buttons (functionality TBD)
+    add50Btn.addEventListener('click', () => console.log('Add 50 clicked'));
+    add10Btn.addEventListener('click', () => console.log('Add 10 clicked'));
+    left50Btn.addEventListener('click', () => console.log('Left 50 clicked'));
+    left10Btn.addEventListener('click', () => console.log('Left 10 clicked'));
+    right10Btn.addEventListener('click', () => console.log('Right 10 clicked'));
+    right50Btn.addEventListener('click', () => console.log('Right 50 clicked'));
+    drop10Btn.addEventListener('click', () => console.log('Drop 10 clicked'));
+    drop50Btn.addEventListener('click', () => console.log('Drop 50 clicked'));
   } else {
     calcAdjustBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     calcSpreadBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    // Disable new buttons with alerts
+    add50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    add10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    left50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    left10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    right10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    right50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    drop10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+    drop50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
   }
 }
 
@@ -336,16 +382,14 @@ function showWithObserver() {
   setActiveTab('With Forward Observer');
   const mission = fireMissions[selectedMissionIndex];
   document.getElementById('inputs-container').innerHTML = `
-    <input type="text" id="observer-easting" placeholder="Observer Easting (5 digits)" value="${mission.ObserverEasting || ''}">
-    <div class="error" id="observer-easting-error"></div>
-    <input type="text" id="observer-northing" placeholder="Observer Northing (5 digits)" value="${mission.ObserverNorthing || ''}">
-    <div class="error" id="observer-northing-error"></div>
+    <input type="text" id="target-easting" placeholder="Target Easting (5 digits)" value="${mission.TargetEasting || ''}">
+    <div class="error" id="easting-error"></div>
+    <input type="text" id="target-northing" placeholder="Target Northing (5 digits)" value="${mission.TargetNorthing || ''}">
+    <div class="error" id="northing-error"></div>
+    <input type="text" id="target-height" placeholder="Target Height (Meters)" value="${mission.TargetHeight || ''}">
+    <div class="error" id="target-height-error"></div>
     <input type="text" id="observer-bearing" placeholder="Observer Bearing to Target (0-360 degrees)" value="${mission.ObserverBearing || ''}">
     <div class="error" id="bearing-error"></div>
-    <input type="text" id="observer-range" placeholder="Observer Range to Target (Meters)" value="${mission.ObserverRangeToTgt || ''}">
-    <div class="error" id="observer-range-error"></div>
-    <input type="text" id="observer-altitude" placeholder="Observers Estimation of target altitude (Meters)" value="${mission.ObserverAltitude || ''}">
-    <div class="error" id="observer-altitude-error"></div>
     <div class="calculate-button">
       <button id="calculate-btn">Calculate</button>
     </div>
