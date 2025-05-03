@@ -643,6 +643,10 @@ function calculate() {
     const rightAdjustment = Number(document.getElementById('right-input').value) || 0;
     console.log("Adjustments:", addAdjustment, dropAdjustment, leftAdjustment, rightAdjustment);
 
+    // Get bearing and range inputs for adjustments (assuming these exist in HTML)
+    const adjustFireBearing = document.getElementById('adjust-fire-bearing');
+    const adjustFireRange = document.getElementById('adjust-fire-range');
+
     // Validate inputs
     if (isNaN(addAdjustment) || addAdjustment < 0) {
       document.getElementById('add-error').textContent = "Must be a positive number.";
@@ -668,6 +672,18 @@ function calculate() {
     } else {
       document.getElementById('right-error').textContent = "";
     }
+    if (isNaN(adjustFireBearing.value) || adjustFireBearing.value < 0 || adjustFireBearing.value > 360) {
+      document.getElementById('adjust-fire-bearing-error').textContent = "Must be between 0 and 360.";
+      valid = false;
+    } else {
+      document.getElementById('adjust-fire-bearing-error').textContent = "";
+    }
+    if (isNaN(adjustFireRange.value) || adjustFireRange.value === '' || Number(adjustFireRange.value) < 0) {
+      document.getElementById('adjust-fire-range-error').textContent = "Must be a positive number.";
+      valid = false;
+    } else {
+      document.getElementById('adjust-fire-range-error').textContent = "";
+    }
 
     if (valid) {
       // Calculate new coordinates
@@ -675,11 +691,11 @@ function calculate() {
       const adjustDistance = Number(adjustFireRange.value);
       const newTargetEasting = Number(mission.TargetEasting) + adjustDistance * Math.sin(bearingRad);
       const newTargetNorthing = Number(mission.TargetNorthing) + adjustDistance * Math.cos(bearingRad);
-    
+
       // Update mission data
       mission.TargetEasting = newTargetEasting.toFixed(0);
       mission.TargetNorthing = newTargetNorthing.toFixed(0);
-    
+
       // Recalculate firing solutions
       mission.firingSolutions = main(
         launcherEasting,
@@ -692,9 +708,9 @@ function calculate() {
         gunParamsCurrent.drag,
         gunParamsCurrent.velocity
       );
-    
+
       mission.HasPressedCalculate = true;
-    
+
       // Update UI
       console.log("Updating UI with firing solutions");
       updateAdjustFireButton();
@@ -703,6 +719,7 @@ function calculate() {
         showAdjustFire(); // Let this function display the new coordinates
       }
     }
+  }
 
   if (valid) {
     console.log("Updating UI with firing solutions");
@@ -719,7 +736,6 @@ function calculate() {
     console.log("Validation failed");
   }
 }
-
 function displayFiringSolution() {
   const mission = fireMissions[selectedMissionIndex];
   const solution = mission.firingSolutions || {};
