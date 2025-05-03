@@ -669,55 +669,40 @@ function calculate() {
       document.getElementById('right-error').textContent = "";
     }
 
-    if (valid && mission.TargetEasting && mission.TargetNorthing) {
-      // Calculate net adjustments
-      const rangeAdjustment = addAdjustment - dropAdjustment; // Net range change
-      const lateralAdjustment = rightAdjustment - leftAdjustment; // Net lateral change (right is positive)
-
-      // Convert to radians
-      const bearingRad = observerBearing * (Math.PI / 180);
-      const lateralBearingRad = (observerBearing + 90) * (Math.PI / 180); // Perpendicular to bearing (right)
-
-      // Calculate range vector (along observer's bearing)
-      const rangeEasting = rangeAdjustment * Math.sin(bearingRad);
-      const rangeNorthing = rangeAdjustment * Math.cos(bearingRad);
-
-      // Calculate lateral vector (perpendicular to bearing)
-      const lateralEasting = lateralAdjustment * Math.sin(lateralBearingRad);
-      const lateralNorthing = lateralAdjustment * Math.cos(lateralBearingRad);
-
-      // Compute new target coordinates
-      const newTargetEasting = Number(mission.TargetEasting) + rangeEasting + lateralEasting;
-      const newTargetNorthing = Number(mission.TargetNorthing) + rangeNorthing + lateralNorthing;
-      console.log("New target coordinates:", newTargetEasting, newTargetNorthing);
-
+    if (valid) {
+      // Calculate new coordinates
+      const bearingRad = Number(adjustFireBearing.value) * (Math.PI / 180);
+      const adjustDistance = Number(adjustFireRange.value);
+      const newTargetEasting = Number(mission.TargetEasting) + adjustDistance * Math.sin(bearingRad);
+      const newTargetNorthing = Number(mission.TargetNorthing) + adjustDistance * Math.cos(bearingRad);
+    
+      // Update mission data
+      mission.TargetEasting = newTargetEasting.toFixed(0);
+      mission.TargetNorthing = newTargetNorthing.toFixed(0);
+    
       // Recalculate firing solutions
       mission.firingSolutions = main(
         launcherEasting,
         launcherNorthing,
         launcherHeight,
-        newTargetEasting,
-        newTargetNorthing,
+        Number(mission.TargetEasting),
+        Number(mission.TargetNorthing),
         Number(mission.TargetHeight || 0),
         gunParamsCurrent.mass,
         gunParamsCurrent.drag,
         gunParamsCurrent.velocity
       );
-      console.log("Firing solutions:", mission.firingSolutions);
-
-      // Update mission data
-      mission.TargetEasting = newTargetEasting.toFixed(0);
-      mission.TargetNorthing = newTargetNorthing.toFixed(0);
-
-      // Update UI
-      document.getElementById('adjust-new-easting').textContent = mission.TargetEasting;
-      document.getElementById('adjust-new-northing').textContent = mission.TargetNorthing;
+    
       mission.HasPressedCalculate = true;
-    } else if (!mission.TargetEasting || !mission.TargetNorthing) {
-      alert('No previous target data available for adjustment.');
-      valid = false;
+    
+      // Update UI
+      console.log("Updating UI with firing solutions");
+      updateAdjustFireButton();
+      displayFiringSolution();
+      if (activeTab.includes('Adjust Fire')) {
+        showAdjustFire(); // Let this function display the new coordinates
+      }
     }
-  }
 
   if (valid) {
     console.log("Updating UI with firing solutions");
