@@ -121,7 +121,7 @@ function showAdjustFire() {
       <!-- Left Section: Left Input and Buttons -->
       <div style="display: flex; align-items: center; gap: 10px;">
         <input type="text" id="left-input" value="${cumulativeLeft}" readonly style="width: 50px; text-align: center;" placeholder="Left">
-        <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; flex-direction: row; gap: 10px;"> <!-- Changed from column to row -->
           <button id="left-50-btn" ${calculateButtonDisabled}>Left 50</button>
           <button id="left-10-btn" ${calculateButtonDisabled}>Left 10</button>
         </div>
@@ -145,7 +145,7 @@ function showAdjustFire() {
       </div>
       <!-- Right Section: Right Buttons and Input -->
       <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; flex-direction: row; gap: 10px;"> <!-- Changed from column to row -->
           <button id="right-10-btn" ${calculateButtonDisabled}>Right 10</button>
           <button id="right-50-btn" ${calculateButtonDisabled}>Right 50</button>
         </div>
@@ -157,7 +157,7 @@ function showAdjustFire() {
     </div>
   `;
 
-  // Get DOM elements for event listeners
+  // Event listeners remain unchanged
   const calcAdjustBtn = document.getElementById('calculate-adjustment-btn');
   const calcSpreadBtn = document.getElementById('calculate-spread-btn');
   const add50Btn = document.getElementById('add-50-btn');
@@ -177,7 +177,6 @@ function showAdjustFire() {
   if (mission.HasPressedCalculate) {
     calcAdjustBtn.addEventListener('click', calculate);
     calcSpreadBtn.addEventListener('click', calculateSpread);
-    // Add event listeners for adjustment buttons
     add50Btn.addEventListener('click', () => {
       const currentAdd = Number(addInput.value) || 0;
       addInput.value = currentAdd + 50;
@@ -221,7 +220,6 @@ function showAdjustFire() {
   } else {
     calcAdjustBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     calcSpreadBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    // Disable new buttons with alerts
     add50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     add10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
     left50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
@@ -496,6 +494,7 @@ function calculate() {
 
   let valid = true;
 
+  // Existing "Without Forward Observer" logic unchanged
   if (activeTab.includes('Without Forward Observer')) {
     console.log("Processing Without Forward Observer");
     const targetEasting = document.getElementById('target-easting');
@@ -532,7 +531,7 @@ function calculate() {
 
     if (valid) {
       console.log("Launcher:", launcherEasting, launcherNorthing);
-     console.log("Target:", paddedTargetEasting, paddedTargetNorthing);
+      console.log("Target:", paddedTargetEasting, paddedTargetNorthing);
       mission.TargetEasting = paddedTargetEasting;
       mission.TargetNorthing = paddedTargetNorthing;
       mission.TargetHeight = targetHeight.value;
@@ -551,7 +550,9 @@ function calculate() {
       console.log("Firing solutions:", mission.firingSolutions);
       mission.HasPressedCalculate = true;
     }
-  } else if (activeTab.includes('With Forward Observer')) {
+  } 
+  // Existing "With Forward Observer" logic unchanged
+  else if (activeTab.includes('With Forward Observer')) {
     console.log("Processing With Forward Observer");
     const observerEasting = document.getElementById('observer-easting');
     const observerNorthing = document.getElementById('observer-northing');
@@ -626,36 +627,71 @@ function calculate() {
       mission.TargetNorthing = mission.firingSolutions.updatedNorthingTarget;
       mission.HasPressedCalculate = true;
     }
-  } else if (activeTab.includes('Adjust Fire')) {
+  } 
+  // Modified "Adjust Fire" logic for left/right/add/drop
+  else if (activeTab.includes('Adjust Fire')) {
     console.log("Processing Adjust Fire");
-    const adjustFireBearing = document.getElementById('fire-adjustment-bearing');
-    const adjustFireRange = document.getElementById('fire-adjustment-distance');
 
-    if (isNaN(adjustFireBearing.value) || adjustFireBearing.value < 0 || adjustFireBearing.value > 360) {
-      document.getElementById('adjustment-bearing-error').textContent = "Must be between 0 and 360.";
+    // Get observer's bearing (assume from previous mission data or input)
+    const observerBearing = Number(mission.ObserverBearing) || 0; // Fallback to 0 if not set
+    console.log("Observer bearing:", observerBearing);
+
+    // Get adjustment inputs (ensure these IDs match your HTML)
+    const addAdjustment = Number(document.getElementById('add-input').value) || 0;
+    const dropAdjustment = Number(document.getElementById('drop-input').value) || 0;
+    const leftAdjustment = Number(document.getElementById('left-input').value) || 0;
+    const rightAdjustment = Number(document.getElementById('right-input').value) || 0;
+    console.log("Adjustments:", addAdjustment, dropAdjustment, leftAdjustment, rightAdjustment);
+
+    // Validate inputs
+    if (isNaN(addAdjustment) || addAdjustment < 0) {
+      document.getElementById('add-error').textContent = "Must be a positive number.";
       valid = false;
     } else {
-      document.getElementById('adjustment-bearing-error').textContent = "";
+      document.getElementById('add-error').textContent = "";
     }
-
-    if (isNaN(adjustFireRange.value) || adjustFireRange.value === '' || Number(adjustFireRange.value) < 0) {
-      document.getElementById('adjustment-range-error').textContent = "Must be a positive number.";
+    if (isNaN(dropAdjustment) || dropAdjustment < 0) {
+      document.getElementById('drop-error').textContent = "Must be a positive number.";
       valid = false;
     } else {
-      document.getElementById('adjustment-range-error').textContent = "";
+      document.getElementById('drop-error').textContent = "";
+    }
+    if (isNaN(leftAdjustment) || leftAdjustment < 0) {
+      document.getElementById('left-error').textContent = "Must be a positive number.";
+      valid = false;
+    } else {
+      document.getElementById('left-error').textContent = "";
+    }
+    if (isNaN(rightAdjustment) || rightAdjustment < 0) {
+      document.getElementById('right-error').textContent = "Must be a positive number.";
+      valid = false;
+    } else {
+      document.getElementById('right-error').textContent = "";
     }
 
     if (valid && mission.TargetEasting && mission.TargetNorthing) {
-      mission.adjustFireBearing = adjustFireBearing.value;
-      mission.adjustFireRange = adjustFireRange.value;
+      // Calculate net adjustments
+      const rangeAdjustment = addAdjustment - dropAdjustment; // Net range change
+      const lateralAdjustment = rightAdjustment - leftAdjustment; // Net lateral change (right is positive)
 
-      const bearingRad = Number(adjustFireBearing.value) * (Math.PI / 180);
-      const adjustDistance = Number(adjustFireRange.value);
-      const newTargetEasting = Number(mission.TargetEasting) + adjustDistance * Math.sin(bearingRad);
-      const newTargetNorthing = Number(mission.TargetNorthing) + adjustDistance * Math.cos(bearingRad);
+      // Convert to radians
+      const bearingRad = observerBearing * (Math.PI / 180);
+      const lateralBearingRad = (observerBearing + 90) * (Math.PI / 180); // Perpendicular to bearing (right)
+
+      // Calculate range vector (along observer's bearing)
+      const rangeEasting = rangeAdjustment * Math.sin(bearingRad);
+      const rangeNorthing = rangeAdjustment * Math.cos(bearingRad);
+
+      // Calculate lateral vector (perpendicular to bearing)
+      const lateralEasting = lateralAdjustment * Math.sin(lateralBearingRad);
+      const lateralNorthing = lateralAdjustment * Math.cos(lateralBearingRad);
+
+      // Compute new target coordinates
+      const newTargetEasting = Number(mission.TargetEasting) + rangeEasting + lateralEasting;
+      const newTargetNorthing = Number(mission.TargetNorthing) + rangeNorthing + lateralNorthing;
       console.log("New target coordinates:", newTargetEasting, newTargetNorthing);
 
-      console.log("Calculating firing solutions for Adjust Fire");
+      // Recalculate firing solutions
       mission.firingSolutions = main(
         launcherEasting,
         launcherNorthing,
@@ -669,9 +705,11 @@ function calculate() {
       );
       console.log("Firing solutions:", mission.firingSolutions);
 
+      // Update mission data
       mission.TargetEasting = newTargetEasting.toFixed(0);
       mission.TargetNorthing = newTargetNorthing.toFixed(0);
 
+      // Update UI
       document.getElementById('adjust-new-easting').textContent = mission.TargetEasting;
       document.getElementById('adjust-new-northing').textContent = mission.TargetNorthing;
       mission.HasPressedCalculate = true;
