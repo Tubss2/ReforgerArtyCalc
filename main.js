@@ -79,89 +79,89 @@ function showAdjustFire() {
   console.log("showAdjustFire called");
   setActiveTab('Adjust Fire');
   const mission = fireMissions[selectedMissionIndex];
-  
+
   let spreadText = '';
   if (mission.spread && mission.spread.bearingSolution && mission.spread.elevationSolution) {
-    const elevationDiffDegrees = (Number(mission.spread.elevationSolution) * 0.05625).toFixed(2);
-    spreadText = `
-      Adjust bearing ± ${mission.spread.bearingSolution}°<br>
-      Adjust elevation ± ${elevationDiffDegrees}°
-    `;
+      const elevationDiffDegrees = (Number(mission.spread.elevationSolution) * 0.05625).toFixed(2);
+      spreadText = `
+          Adjust bearing ± ${mission.spread.bearingSolution}°<br>
+          Adjust elevation ± ${elevationDiffDegrees}°
+      `;
   }
 
   const calculateButtonDisabled = mission.HasPressedCalculate ? '' : 'disabled';
-  const observerBearing = mission.ObserverBearing !== null ? mission.ObserverBearing : '0'; // Default to 0 if not set
+  const observerBearing = mission.ObserverBearing !== null ? mission.ObserverBearing : '0';
 
-  // Initialize cumulative adjustment values (placeholders for now)
-  const cumulativeAdd = 0;
-  const cumulativeDrop = 0;
-  const cumulativeLeft = 0;
-  const cumulativeRight = 0;
+  // Initialize cumulative adjustment values from mission data or default to 0
+  const cumulativeAdd = mission.adjustments?.add || 0;
+  const cumulativeDrop = mission.adjustments?.drop || 0;
+  const cumulativeLeft = mission.adjustments?.left || 0;
+  const cumulativeRight = mission.adjustments?.right || 0;
 
   document.getElementById('inputs-container').innerHTML = `
-  <!-- Left Side: Polar Adjustment Inputs -->
-  <div style="float: left; width: 50%;">
-    <div>New Target Grid (after adjustment):</div>
-    <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting || 'N/A'}</span></div>
-    <div>Northing: <span id="adjust-new-northing">${mission.TargetNorthing || 'N/A'}</span></div>
-    <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
-    <div class="error" id="adjustment-bearing-error"></div>
-    <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
-    <div class="error" id="adjustment-range-error"></div>
-  </div>
-  <!-- Right Side: Spread Inputs -->
-  <div style="float: right; width: 50%; text-align: right;">
-    <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)">
-    <button id="calculate-spread-btn" style="margin-top: 10px;" ${calculateButtonDisabled}>Calculate Spread</button>
-    <div id="spread-adjustment-text" style="margin-top: 10px;">${spreadText}</div>
-  </div>
-  <div style="clear: both;"></div>
-  <!-- Center Section: Observer Adjustment Buttons and Inputs -->
-  <div class="adjust-fire-buttons" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px;">
-    <!-- Left Section -->
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <input type="text" id="left-input" value="${cumulativeLeft}" readonly style="width: 50px; text-align: center;" placeholder="Left">
-      <div class="error" id="left-error"></div>
-      <div style="display: flex; flex-direction: row; gap: 10px;">
-        <button id="left-50-btn" ${calculateButtonDisabled}>Left 50</button>
-        <button id="left-10-btn" ${calculateButtonDisabled}>Left 10</button>
+      <!-- Left Side: Adjustment Inputs -->
+      <div style="float: left; width: 50%;">
+          <div>New Target Grid (after adjustment):</div>
+          <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting || 'N/A'}</span></div>
+          <div>Northing: <span id="adjust-new-northing">${mission.TargetNorthing || 'N/A'}</span></div>
+          <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
+          <div class="error" id="adjustment-bearing-error"></div>
+          <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
+          <div class="error" id="adjustment-range-error"></div>
       </div>
-    </div>
-    <!-- Center Section -->
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-      <input type="text" id="add-input" value="${cumulativeAdd}" readonly style="width: 50px; text-align: center;" placeholder="Add">
-      <div class="error" id="add-error"></div>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <button id="add-50-btn" ${calculateButtonDisabled}>Add 50</button>
-        <button id="add-10-btn" ${calculateButtonDisabled}>Add 10</button>
+      <!-- Right Side: Spread Inputs -->
+      <div style="float: right; width: 50%; text-align: right;">
+          <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)">
+          <button id="calculate-spread-btn" style="margin-top: 10px;" ${calculateButtonDisabled}>Calculate Spread</button>
+          <div id="spread-adjustment-text" style="margin-top: 10px;">${spreadText}</div>
       </div>
-      <div style="display: flex; flex-direction: column; align-items: center;">
-        <label for="obs-bearing-input">Obs Brg</label>
-        <input type="text" id="obs-bearing-input" value="${observerBearing}" style="width: 60px; text-align: center;">
+      <div style="clear: both;"></div>
+      <!-- Center Section: Adjustment Buttons and Inputs -->
+      <div class="adjust-fire-buttons" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px;">
+          <!-- Left Section: Left Input and Buttons -->
+          <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="text" id="left-input" value="${cumulativeLeft}" style="width: 50px; text-align: center;" placeholder="Left">
+              <div class="error" id="left-error"></div>
+              <div style="display: flex; flex-direction: row; gap: 10px;">
+                  <button id="left-50-btn" ${calculateButtonDisabled}>Left 50</button>
+                  <button id="left-10-btn" ${calculateButtonDisabled}>Left 10</button>
+              </div>
+          </div>
+          <!-- Center Section: Add, Obs Brg, Drop -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+              <input type="text" id="add-input" value="${cumulativeAdd}" style="width: 50px; text-align: center;" placeholder="Add">
+              <div class="error" id="add-error"></div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <button id="add-50-btn" ${calculateButtonDisabled}>Add 50</button>
+                  <button id="add-10-btn" ${calculateButtonDisabled}>Add 10</button>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                  <label for="obs-bearing-input">Obs Brg</label>
+                  <input type="text" id="obs-bearing-input" value="${observerBearing}" style="width: 60px; text-align: center;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <button id="drop-10-btn" ${calculateButtonDisabled}>Drop 10</button>
+                  <button id="drop-50-btn" ${calculateButtonDisabled}>Drop 50</button>
+              </div>
+              <input type="text" id="drop-input" value="${cumulativeDrop}" style="width: 50px; text-align: center;" placeholder="Drop">
+              <div class="error" id="drop-error"></div>
+          </div>
+          <!-- Right Section: Right Buttons and Input -->
+          <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="display: flex; flex-direction: row; gap: 10px;">
+                  <button id="right-10-btn" ${calculateButtonDisabled}>Right 10</button>
+                  <button id="right-50-btn" ${calculateButtonDisabled}>Right 50</button>
+              </div>
+              <input type="text" id="right-input" value="${cumulativeRight}" style="width: 50px; text-align: center;" placeholder="Right">
+              <div class="error" id="right-error"></div>
+          </div>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <button id="drop-10-btn" ${calculateButtonDisabled}>Drop 10</button>
-        <button id="drop-50-btn" ${calculateButtonDisabled}>Drop 50</button>
+      <div class="calculate-button">
+          <button id="calculate-adjustment-btn" ${calculateButtonDisabled}>Calculate Adjustment</button>
       </div>
-      <input type="text" id="drop-input" value="${cumulativeDrop}" readonly style="width: 50px; text-align: center;" placeholder="Drop">
-      <div class="error" id="drop-error"></div>
-    </div>
-    <!-- Right Section -->
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <div style="display: flex; flex-direction: row; gap: 10px;">
-        <button id="right-10-btn" ${calculateButtonDisabled}>Right 10</button>
-        <button id="right-50-btn" ${calculateButtonDisabled}>Right 50</button>
-      </div>
-      <input type="text" id="right-input" value="${cumulativeRight}" readonly style="width: 50px; text-align: center;" placeholder="Right">
-      <div class="error" id="right-error"></div>
-    </div>
-  </div>
-  <div class="calculate-button">
-    <button id="calculate-adjustment-btn" ${calculateButtonDisabled}>Calculate Adjustment</button>
-  </div>
-`;
+  `;
 
-  // Event listeners remain unchanged
+  // Event listeners
   const calcAdjustBtn = document.getElementById('calculate-adjustment-btn');
   const calcSpreadBtn = document.getElementById('calculate-spread-btn');
   const add50Btn = document.getElementById('add-50-btn');
@@ -179,59 +179,88 @@ function showAdjustFire() {
   const dropInput = document.getElementById('drop-input');
 
   if (mission.HasPressedCalculate) {
-    calcAdjustBtn.addEventListener('click', calculate);
-    calcSpreadBtn.addEventListener('click', calculateSpread);
-    add50Btn.addEventListener('click', () => {
-      const currentAdd = Number(addInput.value) || 0;
-      addInput.value = currentAdd + 50;
-      console.log('Add 50 clicked, cumulative add:', addInput.value);
-    });
-    add10Btn.addEventListener('click', () => {
-      const currentAdd = Number(addInput.value) || 0;
-      addInput.value = currentAdd + 10;
-      console.log('Add 10 clicked, cumulative add:', addInput.value);
-    });
-    left50Btn.addEventListener('click', () => {
-      const currentLeft = Number(leftInput.value) || 0;
-      leftInput.value = currentLeft + 50;
-      console.log('Left 50 clicked, cumulative left:', leftInput.value);
-    });
-    left10Btn.addEventListener('click', () => {
-      const currentLeft = Number(leftInput.value) || 0;
-      leftInput.value = currentLeft + 10;
-      console.log('Left 10 clicked, cumulative left:', leftInput.value);
-    });
-    right10Btn.addEventListener('click', () => {
-      const currentRight = Number(rightInput.value) || 0;
-      rightInput.value = currentRight + 10;
-      console.log('Right 10 clicked, cumulative right:', rightInput.value);
-    });
-    right50Btn.addEventListener('click', () => {
-      const currentRight = Number(rightInput.value) || 0;
-      rightInput.value = currentRight + 50;
-      console.log('Right 50 clicked, cumulative right:', rightInput.value);
-    });
-    drop10Btn.addEventListener('click', () => {
-      const currentDrop = Number(dropInput.value) || 0;
-      dropInput.value = currentDrop + 10;
-      console.log('Drop 10 clicked, cumulative drop:', dropInput.value);
-    });
-    drop50Btn.addEventListener('click', () => {
-      const currentDrop = Number(dropInput.value) || 0;
-      dropInput.value = currentDrop + 50;
-      console.log('Drop 50 clicked, cumulative drop:', dropInput.value);
-    });
+      calcAdjustBtn.addEventListener('click', calculate);
+      calcSpreadBtn.addEventListener('click', calculateSpread);
+      add50Btn.addEventListener('click', () => {
+          const currentAdd = Number(addInput.value) || 0;
+          addInput.value = (currentAdd + 50).toString();
+          mission.adjustments = mission.adjustments || {};
+          mission.adjustments.add = Number(addInput.value);
+          console.log('Add 50 clicked, cumulative add:', addInput.value);
+      });
+      add10Btn.addEventListener('click', () => {
+          const currentAdd = Number(addInput.value) || 0;
+          addInput.value = (currentAdd + 10).toString();
+          mission.adjustments = mission.adjustments || {};
+          mission.adjustments.add = Number(addInput.value);
+          console.log('Add 10 clicked, cumulative add:', addInput.value);
+      });
+      left50Btn.addEventListener('click', () => {
+          const currentLeft = Number(leftInput.value) || 0;
+          leftInput.value = (currentLeft + 50).toString();
+          mission.adjustments = mission.adjustments || {};
+          mission.adjustments.left = Number(leftInput.value);
+          console.log('Left 50 clicked, cumulative left:', leftInput.value);
+      });
+      left10Btn.addEventListener('click', () => {
+          const currentLeft = Number(leftInput.value) || 0;
+          leftInput.value = (currentLeft + 10).toString();
+          mission.adjustments = mission.adjustments || {};
+          mission.adjustments.left = Number(leftInput.value);
+          console.log('Left 10 clicked, cumulative left:', leftInput.value);
+      });
+      right10Btn.addEventListener('click', () => {
+          const currentRight = Number(rightInput.value) || 0;
+          rightInput.value = (currentRight + 10).toString();
+          mission.adjustments = mission.adjustments || {};
+          mission.adjustments.right = Number(rightInput.value);
+          console.log('Right 10 clicked, cumulative right:', rightInput.value);
+      });
+      right50Btn.addEventListener('click', () => {
+          const currentRight = Number(rightInput.value) || 0;
+          rightInput.value = (currentRight + 50).toString();
+          mission.adjustments = mission.adjustments || {};
+          mission.adjustments.right = Number(rightInput.value);
+          console.log('Right 50 clicked, cumulative right:', rightInput.value);
+      });
+      drop10Btn.addEventListener('click', () => {
+          const currentDrop = Number(dropInput.value) || 0;
+          dropInput.value = (currentDrop + 10).toString();
+          mission.adjustments = mission.adjustments || {};
+          mission.adjustments.drop = Number(dropInput.value);
+          console.log('Drop 10 clicked, cumulative drop:', dropInput.value);
+      });
+      drop50Btn.addEventListener('click', () => {
+          const currentDrop = Number(dropInput.value) || 0;
+          dropInput.value = (currentDrop + 50).toString();
+          mission.adjustments = mission.adjustments || {};
+          mission.adjustments.drop = Number(dropInput.value);
+          console.log('Drop 50 clicked, cumulative drop:', dropInput.value);
+      });
+      // Add input validation on manual input
+      [addInput, dropInput, leftInput, rightInput].forEach(input => {
+          input.addEventListener('input', () => {
+              const value = Number(input.value);
+              if (isNaN(value) || value < 0) {
+                  document.getElementById(`${input.id}-error`).textContent = "Must be a positive number.";
+              } else {
+                  document.getElementById(`${input.id}-error`).textContent = "";
+                  mission.adjustments = mission.adjustments || {};
+                  mission.adjustments[input.id.split('-')[0]] = value;
+              }
+          });
+      });
   } else {
-    calcAdjustBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    calcSpreadBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    add50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    add10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    left50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    left10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    right10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    right50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    drop10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
-    drop50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+      calcAdjustBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+      calcSpreadBtn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+      add50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+      add10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+      left50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+      left10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+      right10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+      right50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+      drop10Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
+      drop50Btn.addEventListener('click', () => alert('You must calculate a solution first to adjust fire'));
   }
 }
 function calculateSpread() {
@@ -446,17 +475,19 @@ function showWithObserver() {
   setActiveTab('With Forward Observer');
   const mission = fireMissions[selectedMissionIndex];
   document.getElementById('inputs-container').innerHTML = `
-    <input type="text" id="target-easting" placeholder="Target Easting (5 digits)" value="${mission.TargetEasting || ''}">
-    <div class="error" id="easting-error"></div>
-    <input type="text" id="target-northing" placeholder="Target Northing (5 digits)" value="${mission.TargetNorthing || ''}">
-    <div class="error" id="northing-error"></div>
-    <input type="text" id="target-height" placeholder="Target Height (Meters)" value="${mission.TargetHeight || ''}">
-    <div class="error" id="target-height-error"></div>
-    <input type="text" id="observer-bearing" placeholder="Observer Bearing to Target (0-360 degrees)" value="${mission.ObserverBearing || ''}">
-    <div class="error" id="bearing-error"></div>
-    <div class="calculate-button">
-      <button id="calculate-btn">Calculate</button>
-    </div>
+      <input type="text" id="observer-easting" placeholder="Observer Easting (5 digits)" value="${mission.ObserverEasting || ''}">
+      <div class="error" id="observer-easting-error"></div>
+      <input type="text" id="observer-northing" placeholder="Observer Northing (5 digits)" value="${mission.ObserverNorthing || ''}">
+      <div class="error" id="observer-northing-error"></div>
+      <input type="text" id="observer-bearing" placeholder="Observer Bearing to Target (0-360 degrees)" value="${mission.ObserverBearing || ''}">
+      <div class="error" id="bearing-error"></div>
+      <input type="text" id="observer-range" placeholder="Observer Range to Target (Meters)" value="${mission.ObserverRangeToTgt || ''}">
+      <div class="error" id="observer-range-error"></div>
+      <input type="text" id="target-height" placeholder="Target Height (Meters)" value="${mission.TargetHeight || ''}">
+      <div class="error" id="target-height-error"></div>
+      <div class="calculate-button">
+          <button id="calculate-btn">Calculate</button>
+      </div>
   `;
   document.getElementById('calculate-btn').addEventListener('click', calculate);
 }
@@ -553,19 +584,19 @@ function calculate() {
           console.log("Firing solutions:", mission.firingSolutions);
           mission.HasPressedCalculate = true;
       }
-  } else if (activeTab.includes('With Forward Observer')) {
+    } else if (activeTab.includes('With Forward Observer')) {
       console.log("Processing With Forward Observer");
       const observerEasting = document.getElementById('observer-easting');
       const observerNorthing = document.getElementById('observer-northing');
       const observerBearing = document.getElementById('observer-bearing');
       const observerRange = document.getElementById('observer-range');
-      const observerAltitude = document.getElementById('observer-altitude');
-
+      const targetHeightInput = document.getElementById('target-height');
+  
       const paddedObserverEasting = padToFiveDigits(observerEasting.value);
       const paddedObserverNorthing = padToFiveDigits(observerNorthing.value);
       console.log("Padded observer easting:", paddedObserverEasting);
       console.log("Padded observer northing:", paddedObserverNorthing);
-
+  
       if (paddedObserverEasting.length !== 5 || isNaN(paddedObserverEasting)) {
           document.getElementById('observer-easting-error').textContent = "Must be a 5-digit number.";
           valid = false;
@@ -573,7 +604,7 @@ function calculate() {
           document.getElementById('observer-easting-error').textContent = "";
           observerEasting.value = paddedObserverEasting;
       }
-
+  
       if (paddedObserverNorthing.length !== 5 || isNaN(paddedObserverNorthing)) {
           document.getElementById('observer-northing-error').textContent = "Must be a 5-digit number.";
           valid = false;
@@ -581,34 +612,34 @@ function calculate() {
           document.getElementById('observer-northing-error').textContent = "";
           observerNorthing.value = paddedObserverNorthing;
       }
-
+  
       if (isNaN(observerBearing.value) || observerBearing.value < 0 || observerBearing.value > 360) {
           document.getElementById('bearing-error').textContent = "Must be between 0 and 360.";
           valid = false;
       } else {
           document.getElementById('bearing-error').textContent = "";
       }
-
+  
       if (isNaN(observerRange.value) || observerRange.value === '' || Number(observerRange.value) < 0) {
           document.getElementById('observer-range-error').textContent = "Must be a positive number.";
           valid = false;
       } else {
           document.getElementById('observer-range-error').textContent = "";
       }
-
-      if (isNaN(observerAltitude.value) || observerAltitude.value === '') {
-          document.getElementById('observer-altitude-error').textContent = "Must be a valid number.";
+  
+      if (isNaN(targetHeightInput.value) || targetHeightInput.value === '') {
+          document.getElementById('target-height-error').textContent = "Must be a valid number.";
           valid = false;
       } else {
-          document.getElementById('observer-altitude-error').textContent = "";
+          document.getElementById('target-height-error').textContent = "";
       }
-
+  
       if (valid) {
           mission.ObserverEasting = paddedObserverEasting;
           mission.ObserverNorthing = paddedObserverNorthing;
           mission.ObserverBearing = observerBearing.value;
           mission.ObserverRangeToTgt = observerRange.value;
-          mission.ObserverAltitude = observerAltitude.value;
+          mission.TargetHeight = targetHeightInput.value;
           console.log("Calculating firing solutions for With Forward Observer");
           mission.firingSolutions = observerGridCalc(
               launcherNorthing,
@@ -618,7 +649,7 @@ function calculate() {
               Number(paddedObserverNorthing),
               Number(observerBearing.value),
               Number(observerRange.value),
-              Number(observerAltitude.value),
+              Number(targetHeightInput.value),
               gunParamsCurrent.mass,
               gunParamsCurrent.drag,
               gunParamsCurrent.velocity
