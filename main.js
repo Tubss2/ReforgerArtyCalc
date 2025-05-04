@@ -99,63 +99,67 @@ function showAdjustFire() {
   const cumulativeRight = 0;
 
   document.getElementById('inputs-container').innerHTML = `
-    <!-- Left Side: Adjustment Inputs -->
-    <div style="float: left; width: 50%;">
-      <div>New Target Grid (after adjustment):</div>
-      <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting || 'N/A'}</span></div>
-      <div>Northing: <span id="adjust-new-northing">${mission.TargetNorthing || 'N/A'}</span></div>
-      <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
-      <div class="error" id="adjustment-bearing-error"></div>
-      <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
-      <div class="error" id="adjustment-range-error"></div>
-    </div>
-    <!-- Right Side: Spread Inputs -->
-    <div style="float: right; width: 50%; text-align: right;">
-      <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)">
-      <button id="calculate-spread-btn" style="margin-top: 10px;" ${calculateButtonDisabled}>Calculate Spread</button>
-      <div id="spread-adjustment-text" style="margin-top: 10px;">${spreadText}</div>
-    </div>
-    <div style="clear: both;"></div>
-    <!-- Center Section: Adjustment Buttons and Inputs -->
-    <div class="adjust-fire-buttons" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px;">
-      <!-- Left Section: Left Input and Buttons -->
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <input type="text" id="left-input" value="${cumulativeLeft}" readonly style="width: 50px; text-align: center;" placeholder="Left">
-        <div style="display: flex; flex-direction: row; gap: 10px;"> <!-- Changed from column to row -->
-          <button id="left-50-btn" ${calculateButtonDisabled}>Left 50</button>
-          <button id="left-10-btn" ${calculateButtonDisabled}>Left 10</button>
-        </div>
-      </div>
-      <!-- Center Section: Add, Obs Brg, Drop -->
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-        <input type="text" id="add-input" value="${cumulativeAdd}" readonly style="width: 50px; text-align: center;" placeholder="Add">
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button id="add-50-btn" ${calculateButtonDisabled}>Add 50</button>
-          <button id="add-10-btn" ${calculateButtonDisabled}>Add 10</button>
-        </div>
-        <div style="display: flex; flex-direction: column; align-items: center;">
-          <label for="obs-bearing-input">Obs Brg</label>
-          <input type="text" id="obs-bearing-input" value="${observerBearing}" style="width: 60px; text-align: center;">
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button id="drop-10-btn" ${calculateButtonDisabled}>Drop 10</button>
-          <button id="drop-50-btn" ${calculateButtonDisabled}>Drop 50</button>
-        </div>
-        <input type="text" id="drop-input" value="${cumulativeDrop}" readonly style="width: 50px; text-align: center;" placeholder="Drop">
-      </div>
-      <!-- Right Section: Right Buttons and Input -->
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="display: flex; flex-direction: row; gap: 10px;"> <!-- Changed from column to row -->
-          <button id="right-10-btn" ${calculateButtonDisabled}>Right 10</button>
-          <button id="right-50-btn" ${calculateButtonDisabled}>Right 50</button>
-        </div>
-        <input type="text" id="right-input" value="${cumulativeRight}" readonly style="width: 50px; text-align: center;" placeholder="Right">
+  <!-- Left Side: Polar Adjustment Inputs -->
+  <div style="float: left; width: 50%;">
+    <div>New Target Grid (after adjustment):</div>
+    <div>Easting: <span id="adjust-new-easting">${mission.TargetEasting || 'N/A'}</span></div>
+    <div>Northing: <span id="adjust-new-northing">${mission.TargetNorthing || 'N/A'}</span></div>
+    <input type="text" id="fire-adjustment-bearing" placeholder="Bearing Of Adjustment (0-360 degrees)" value="${mission.adjustFireBearing || ''}">
+    <div class="error" id="adjustment-bearing-error"></div>
+    <input type="text" id="fire-adjustment-distance" placeholder="Distance Of Adjustment (Meters)" value="${mission.adjustFireRange || ''}">
+    <div class="error" id="adjustment-range-error"></div>
+  </div>
+  <!-- Right Side: Spread Inputs -->
+  <div style="float: right; width: 50%; text-align: right;">
+    <input type="text" id="manual-spread" placeholder="Manual Spread (Meters)">
+    <button id="calculate-spread-btn" style="margin-top: 10px;" ${calculateButtonDisabled}>Calculate Spread</button>
+    <div id="spread-adjustment-text" style="margin-top: 10px;">${spreadText}</div>
+  </div>
+  <div style="clear: both;"></div>
+  <!-- Center Section: Observer Adjustment Buttons and Inputs -->
+  <div class="adjust-fire-buttons" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px;">
+    <!-- Left Section -->
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <input type="text" id="left-input" value="${cumulativeLeft}" readonly style="width: 50px; text-align: center;" placeholder="Left">
+      <div class="error" id="left-error"></div>
+      <div style="display: flex; flex-direction: row; gap: 10px;">
+        <button id="left-50-btn" ${calculateButtonDisabled}>Left 50</button>
+        <button id="left-10-btn" ${calculateButtonDisabled}>Left 10</button>
       </div>
     </div>
-    <div class="calculate-button">
-      <button id="calculate-adjustment-btn" ${calculateButtonDisabled}>Calculate Adjustment</button>
+    <!-- Center Section -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+      <input type="text" id="add-input" value="${cumulativeAdd}" readonly style="width: 50px; text-align: center;" placeholder="Add">
+      <div class="error" id="add-error"></div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button id="add-50-btn" ${calculateButtonDisabled}>Add 50</button>
+        <button id="add-10-btn" ${calculateButtonDisabled}>Add 10</button>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <label for="obs-bearing-input">Obs Brg</label>
+        <input type="text" id="obs-bearing-input" value="${observerBearing}" style="width: 60px; text-align: center;">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button id="drop-10-btn" ${calculateButtonDisabled}>Drop 10</button>
+        <button id="drop-50-btn" ${calculateButtonDisabled}>Drop 50</button>
+      </div>
+      <input type="text" id="drop-input" value="${cumulativeDrop}" readonly style="width: 50px; text-align: center;" placeholder="Drop">
+      <div class="error" id="drop-error"></div>
     </div>
-  `;
+    <!-- Right Section -->
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="display: flex; flex-direction: row; gap: 10px;">
+        <button id="right-10-btn" ${calculateButtonDisabled}>Right 10</button>
+        <button id="right-50-btn" ${calculateButtonDisabled}>Right 50</button>
+      </div>
+      <input type="text" id="right-input" value="${cumulativeRight}" readonly style="width: 50px; text-align: center;" placeholder="Right">
+      <div class="error" id="right-error"></div>
+    </div>
+  </div>
+  <div class="calculate-button">
+    <button id="calculate-adjustment-btn" ${calculateButtonDisabled}>Calculate Adjustment</button>
+  </div>
+`;
 
   // Event listeners remain unchanged
   const calcAdjustBtn = document.getElementById('calculate-adjustment-btn');
@@ -494,246 +498,270 @@ function calculate() {
 
   let valid = true;
 
-  // Existing "Without Forward Observer" logic unchanged
   if (activeTab.includes('Without Forward Observer')) {
-    console.log("Processing Without Forward Observer");
-    const targetEasting = document.getElementById('target-easting');
-    const targetNorthing = document.getElementById('target-northing');
-    const targetHeight = document.getElementById('target-height');
+      console.log("Processing Without Forward Observer");
+      const targetEasting = document.getElementById('target-easting');
+      const targetNorthing = document.getElementById('target-northing');
+      const targetHeight = document.getElementById('target-height');
 
-    const paddedTargetEasting = padToFiveDigits(targetEasting.value);
-    const paddedTargetNorthing = padToFiveDigits(targetNorthing.value);
-    console.log("Padded target easting:", paddedTargetEasting);
-    console.log("Padded target northing:", paddedTargetNorthing);
+      const paddedTargetEasting = padToFiveDigits(targetEasting.value);
+      const paddedTargetNorthing = padToFiveDigits(targetNorthing.value);
+      console.log("Padded target easting:", paddedTargetEasting);
+      console.log("Padded target northing:", paddedTargetNorthing);
 
-    if (paddedTargetEasting.length !== 5 || isNaN(paddedTargetEasting)) {
-      document.getElementById('easting-error').textContent = "Must be a 5-digit number.";
-      valid = false;
-    } else {
-      document.getElementById('easting-error').textContent = "";
-      targetEasting.value = paddedTargetEasting;
-    }
+      if (paddedTargetEasting.length !== 5 || isNaN(paddedTargetEasting)) {
+          document.getElementById('easting-error').textContent = "Must be a 5-digit number.";
+          valid = false;
+      } else {
+          document.getElementById('easting-error').textContent = "";
+          targetEasting.value = paddedTargetEasting;
+      }
 
-    if (paddedTargetNorthing.length !== 5 || isNaN(paddedTargetNorthing)) {
-      document.getElementById('northing-error').textContent = "Must be a 5-digit number.";
-      valid = false;
-    } else {
-      document.getElementById('northing-error').textContent = "";
-      targetNorthing.value = paddedTargetNorthing;
-    }
+      if (paddedTargetNorthing.length !== 5 || isNaN(paddedTargetNorthing)) {
+          document.getElementById('northing-error').textContent = "Must be a 5-digit number.";
+          valid = false;
+      } else {
+          document.getElementById('northing-error').textContent = "";
+          targetNorthing.value = paddedTargetNorthing;
+      }
 
-    if (isNaN(targetHeight.value) || targetHeight.value === '') {
-      document.getElementById('target-height-error').textContent = "Must be a valid number.";
-      valid = false;
-    } else {
-      document.getElementById('target-height-error').textContent = "";
-    }
+      if (isNaN(targetHeight.value) || targetHeight.value === '') {
+          document.getElementById('target-height-error').textContent = "Must be a valid number.";
+          valid = false;
+      } else {
+          document.getElementById('target-height-error').textContent = "";
+      }
 
-    if (valid) {
-      console.log("Launcher:", launcherEasting, launcherNorthing);
-      console.log("Target:", paddedTargetEasting, paddedTargetNorthing);
-      mission.TargetEasting = paddedTargetEasting;
-      mission.TargetNorthing = paddedTargetNorthing;
-      mission.TargetHeight = targetHeight.value;
-      console.log("Calculating firing solutions for Without Forward Observer");
-      mission.firingSolutions = main(
-        launcherEasting,
-        launcherNorthing,
-        launcherHeight,
-        Number(paddedTargetEasting),
-        Number(paddedTargetNorthing),
-        Number(targetHeight.value),
-        gunParamsCurrent.mass,
-        gunParamsCurrent.drag,
-        gunParamsCurrent.velocity
-      );
-      console.log("Firing solutions:", mission.firingSolutions);
-      mission.HasPressedCalculate = true;
-    }
-  } 
-  // Existing "With Forward Observer" logic unchanged
-  else if (activeTab.includes('With Forward Observer')) {
-    console.log("Processing With Forward Observer");
-    const observerEasting = document.getElementById('observer-easting');
-    const observerNorthing = document.getElementById('observer-northing');
-    const observerBearing = document.getElementById('observer-bearing');
-    const observerRange = document.getElementById('observer-range');
-    const observerAltitude = document.getElementById('observer-altitude');
+      if (valid) {
+          console.log("Launcher:", launcherEasting, launcherNorthing);
+          console.log("Target:", paddedTargetEasting, paddedTargetNorthing);
+          mission.TargetEasting = paddedTargetEasting;
+          mission.TargetNorthing = paddedTargetNorthing;
+          mission.TargetHeight = targetHeight.value;
+          console.log("Calculating firing solutions for Without Forward Observer");
+          mission.firingSolutions = main(
+              launcherEasting,
+              launcherNorthing,
+              launcherHeight,
+              Number(paddedTargetEasting),
+              Number(paddedTargetNorthing),
+              Number(targetHeight.value),
+              gunParamsCurrent.mass,
+              gunParamsCurrent.drag,
+              gunParamsCurrent.velocity
+          );
+          console.log("Firing solutions:", mission.firingSolutions);
+          mission.HasPressedCalculate = true;
+      }
+  } else if (activeTab.includes('With Forward Observer')) {
+      console.log("Processing With Forward Observer");
+      const observerEasting = document.getElementById('observer-easting');
+      const observerNorthing = document.getElementById('observer-northing');
+      const observerBearing = document.getElementById('observer-bearing');
+      const observerRange = document.getElementById('observer-range');
+      const observerAltitude = document.getElementById('observer-altitude');
 
-    const paddedObserverEasting = padToFiveDigits(observerEasting.value);
-    const paddedObserverNorthing = padToFiveDigits(observerNorthing.value);
-    console.log("Padded observer easting:", paddedObserverEasting);
-    console.log("Padded observer northing:", paddedObserverNorthing);
+      const paddedObserverEasting = padToFiveDigits(observerEasting.value);
+      const paddedObserverNorthing = padToFiveDigits(observerNorthing.value);
+      console.log("Padded observer easting:", paddedObserverEasting);
+      console.log("Padded observer northing:", paddedObserverNorthing);
 
-    if (paddedObserverEasting.length !== 5 || isNaN(paddedObserverEasting)) {
-      document.getElementById('observer-easting-error').textContent = "Must be a 5-digit number.";
-      valid = false;
-    } else {
-      document.getElementById('observer-easting-error').textContent = "";
-      observerEasting.value = paddedObserverEasting;
-    }
+      if (paddedObserverEasting.length !== 5 || isNaN(paddedObserverEasting)) {
+          document.getElementById('observer-easting-error').textContent = "Must be a 5-digit number.";
+          valid = false;
+      } else {
+          document.getElementById('observer-easting-error').textContent = "";
+          observerEasting.value = paddedObserverEasting;
+      }
 
-    if (paddedObserverNorthing.length !== 5 || isNaN(paddedObserverNorthing)) {
-      document.getElementById('observer-northing-error').textContent = "Must be a 5-digit number.";
-      valid = false;
-    } else {
-      document.getElementById('observer-northing-error').textContent = "";
-      observerNorthing.value = paddedObserverNorthing;
-    }
+      if (paddedObserverNorthing.length !== 5 || isNaN(paddedObserverNorthing)) {
+          document.getElementById('observer-northing-error').textContent = "Must be a 5-digit number.";
+          valid = false;
+      } else {
+          document.getElementById('observer-northing-error').textContent = "";
+          observerNorthing.value = paddedObserverNorthing;
+      }
 
-    if (isNaN(observerBearing.value) || observerBearing.value < 0 || observerBearing.value > 360) {
-      document.getElementById('bearing-error').textContent = "Must be between 0 and 360.";
-      valid = false;
-    } else {
-      document.getElementById('bearing-error').textContent = "";
-    }
+      if (isNaN(observerBearing.value) || observerBearing.value < 0 || observerBearing.value > 360) {
+          document.getElementById('bearing-error').textContent = "Must be between 0 and 360.";
+          valid = false;
+      } else {
+          document.getElementById('bearing-error').textContent = "";
+      }
 
-    if (isNaN(observerRange.value) || observerRange.value === '' || Number(observerRange.value) < 0) {
-      document.getElementById('observer-range-error').textContent = "Must be a positive number.";
-      valid = false;
-    } else {
-      document.getElementById('observer-range-error').textContent = "";
-    }
+      if (isNaN(observerRange.value) || observerRange.value === '' || Number(observerRange.value) < 0) {
+          document.getElementById('observer-range-error').textContent = "Must be a positive number.";
+          valid = false;
+      } else {
+          document.getElementById('observer-range-error').textContent = "";
+      }
 
-    if (isNaN(observerAltitude.value) || observerAltitude.value === '') {
-      document.getElementById('observer-altitude-error').textContent = "Must be a valid number.";
-      valid = false;
-    } else {
-      document.getElementById('observer-altitude-error').textContent = "";
-    }
+      if (isNaN(observerAltitude.value) || observerAltitude.value === '') {
+          document.getElementById('observer-altitude-error').textContent = "Must be a valid number.";
+          valid = false;
+      } else {
+          document.getElementById('observer-altitude-error').textContent = "";
+      }
 
-    if (valid) {
-      mission.ObserverEasting = paddedObserverEasting;
-      mission.ObserverNorthing = paddedObserverNorthing;
-      mission.ObserverBearing = observerBearing.value;
-      mission.ObserverRangeToTgt = observerRange.value;
-      mission.ObserverAltitude = observerAltitude.value;
-      console.log("Calculating firing solutions for With Forward Observer");
-      mission.firingSolutions = observerGridCalc(
-        launcherNorthing,
-        launcherEasting,
-        launcherHeight,
-        Number(paddedObserverEasting),
-        Number(paddedObserverNorthing),
-        Number(observerBearing.value),
-        Number(observerRange.value),
-        Number(observerAltitude.value),
-        gunParamsCurrent.mass,
-        gunParamsCurrent.drag,
-        gunParamsCurrent.velocity
-      );
-      console.log("Firing solutions:", mission.firingSolutions);
-      mission.TargetEasting = mission.firingSolutions.updatedEastingTarget;
-      mission.TargetNorthing = mission.firingSolutions.updatedNorthingTarget;
-      mission.HasPressedCalculate = true;
-    }
-  } 
-  // Modified "Adjust Fire" logic for left/right/add/drop
-  else if (activeTab.includes('Adjust Fire')) {
-    console.log("Processing Adjust Fire");
+      if (valid) {
+          mission.ObserverEasting = paddedObserverEasting;
+          mission.ObserverNorthing = paddedObserverNorthing;
+          mission.ObserverBearing = observerBearing.value;
+          mission.ObserverRangeToTgt = observerRange.value;
+          mission.ObserverAltitude = observerAltitude.value;
+          console.log("Calculating firing solutions for With Forward Observer");
+          mission.firingSolutions = observerGridCalc(
+              launcherNorthing,
+              launcherEasting,
+              launcherHeight,
+              Number(paddedObserverEasting),
+              Number(paddedObserverNorthing),
+              Number(observerBearing.value),
+              Number(observerRange.value),
+              Number(observerAltitude.value),
+              gunParamsCurrent.mass,
+              gunParamsCurrent.drag,
+              gunParamsCurrent.velocity
+          );
+          console.log("Firing solutions:", mission.firingSolutions);
+          mission.TargetEasting = mission.firingSolutions.updatedEastingTarget;
+          mission.TargetNorthing = mission.firingSolutions.updatedNorthingTarget;
+          mission.HasPressedCalculate = true;
+      }
+  } else if (activeTab.includes('Adjust Fire')) {
+      console.log("Processing Adjust Fire");
 
-    // Get observer's bearing (assume from previous mission data or input)
-    const observerBearing = Number(mission.ObserverBearing) || 0; // Fallback to 0 if not set
-    console.log("Observer bearing:", observerBearing);
+      // Get observer's bearing (defaults to 0 if not set)
+      const observerBearing = Number(document.getElementById('obs-bearing-input').value) || 0;
+      console.log("Observer bearing:", observerBearing);
 
-    // Get adjustment inputs (ensure these IDs match your HTML)
-    const addAdjustment = Number(document.getElementById('add-input').value) || 0;
-    const dropAdjustment = Number(document.getElementById('drop-input').value) || 0;
-    const leftAdjustment = Number(document.getElementById('left-input').value) || 0;
-    const rightAdjustment = Number(document.getElementById('right-input').value) || 0;
-    console.log("Adjustments:", addAdjustment, dropAdjustment, leftAdjustment, rightAdjustment);
+      let valid = true;
 
-    // Get bearing and range inputs for adjustments (assuming these exist in HTML)
-    const adjustFireBearing = document.getElementById('adjust-fire-bearing');
-    const adjustFireRange = document.getElementById('adjust-fire-range');
+      // **Polar Adjustment**
+      const adjustBearingInput = document.getElementById('fire-adjustment-bearing').value;
+      const adjustRangeInput = document.getElementById('fire-adjustment-distance').value;
+      let polarBearing = Number(adjustBearingInput) || 0;
+      let polarDistance = Number(adjustRangeInput) || 0;
 
-    // Validate inputs
-    if (isNaN(addAdjustment) || addAdjustment < 0) {
-      document.getElementById('add-error').textContent = "Must be a positive number.";
-      valid = false;
-    } else {
-      document.getElementById('add-error').textContent = "";
-    }
-    if (isNaN(dropAdjustment) || dropAdjustment < 0) {
-      document.getElementById('drop-error').textContent = "Must be a positive number.";
-      valid = false;
-    } else {
-      document.getElementById('drop-error').textContent = "";
-    }
-    if (isNaN(leftAdjustment) || leftAdjustment < 0) {
-      document.getElementById('left-error').textContent = "Must be a positive number.";
-      valid = false;
-    } else {
-      document.getElementById('left-error').textContent = "";
-    }
-    if (isNaN(rightAdjustment) || rightAdjustment < 0) {
-      document.getElementById('right-error').textContent = "Must be a positive number.";
-      valid = false;
-    } else {
-      document.getElementById('right-error').textContent = "";
-    }
-    if (isNaN(adjustFireBearing.value) || adjustFireBearing.value < 0 || adjustFireBearing.value > 360) {
-      document.getElementById('adjust-fire-bearing-error').textContent = "Must be between 0 and 360.";
-      valid = false;
-    } else {
-      document.getElementById('adjust-fire-bearing-error').textContent = "";
-    }
-    if (isNaN(adjustFireRange.value) || adjustFireRange.value === '' || Number(adjustFireRange.value) < 0) {
-      document.getElementById('adjust-fire-range-error').textContent = "Must be a positive number.";
-      valid = false;
-    } else {
-      document.getElementById('adjust-fire-range-error').textContent = "";
-    }
+      if (adjustBearingInput && (isNaN(polarBearing) || polarBearing < 0 || polarBearing > 360)) {
+          document.getElementById('adjustment-bearing-error').textContent = "Must be 0-360 degrees.";
+          valid = false;
+      } else {
+          document.getElementById('adjustment-bearing-error').textContent = "";
+      }
 
-    if (valid) {
-      // Calculate new coordinates
-      const bearingRad = Number(adjustFireBearing.value) * (Math.PI / 180);
-      const adjustDistance = Number(adjustFireRange.value);
-      const newTargetEasting = Number(mission.TargetEasting) + adjustDistance * Math.sin(bearingRad);
-      const newTargetNorthing = Number(mission.TargetNorthing) + adjustDistance * Math.cos(bearingRad);
+      if (adjustRangeInput && (isNaN(polarDistance) || polarDistance < 0)) {
+          document.getElementById('adjustment-range-error').textContent = "Must be a positive number.";
+          valid = false;
+      } else {
+          document.getElementById('adjustment-range-error').textContent = "";
+      }
 
-      // Update mission data
-      mission.TargetEasting = newTargetEasting.toFixed(0);
-      mission.TargetNorthing = newTargetNorthing.toFixed(0);
+      // **Observer Adjustment**
+      const addAdjustment = Number(document.getElementById('add-input').value) || 0;
+      const dropAdjustment = Number(document.getElementById('drop-input').value) || 0;
+      const leftAdjustment = Number(document.getElementById('left-input').value) || 0;
+      const rightAdjustment = Number(document.getElementById('right-input').value) || 0;
+      console.log("Adjustments:", addAdjustment, dropAdjustment, leftAdjustment, rightAdjustment);
+
+      if (isNaN(addAdjustment) || addAdjustment < 0) {
+          document.getElementById('add-error').textContent = "Must be a positive number.";
+          valid = false;
+      } else {
+          document.getElementById('add-error').textContent = "";
+      }
+
+      if (isNaN(dropAdjustment) || dropAdjustment < 0) {
+          document.getElementById('drop-error').textContent = "Must be a positive number.";
+          valid = false;
+      } else {
+          document.getElementById('drop-error').textContent = "";
+      }
+
+      if (isNaN(leftAdjustment) || leftAdjustment < 0) {
+          document.getElementById('left-error').textContent = "Must be a positive number.";
+          valid = false;
+      } else {
+          document.getElementById('left-error').textContent = "";
+      }
+
+      if (isNaN(rightAdjustment) || rightAdjustment < 0) {
+          document.getElementById('right-error').textContent = "Must be a positive number.";
+          valid = false;
+      } else {
+          document.getElementById('right-error').textContent = "";
+      }
+
+      if (!valid) return;
+
+      // Current target coordinates
+      let currentEasting = Number(mission.TargetEasting) || 0;
+      let currentNorthing = Number(mission.TargetNorthing) || 0;
+
+      // **Apply Polar Adjustment**
+      if (polarDistance > 0) {
+          const polarBearingRad = polarBearing * (Math.PI / 180);
+          const polarDeltaEasting = polarDistance * Math.sin(polarBearingRad);
+          const polarDeltaNorthing = polarDistance * Math.cos(polarBearingRad);
+          currentEasting += polarDeltaEasting;
+          currentNorthing += polarDeltaNorthing;
+      }
+
+      // **Apply Observer Adjustment**
+      const netRangeAdjustment = addAdjustment - dropAdjustment;
+      const netLateralAdjustment = rightAdjustment - leftAdjustment;
+      if (netRangeAdjustment !== 0 || netLateralAdjustment !== 0) {
+          const observerBearingRad = observerBearing * (Math.PI / 180);
+
+          // Range adjustment (along observer's bearing)
+          const rangeDeltaEasting = netRangeAdjustment * Math.sin(observerBearingRad);
+          const rangeDeltaNorthing = netRangeAdjustment * Math.cos(observerBearingRad);
+
+          // Lateral adjustment (perpendicular to observer's bearing)
+          const lateralBearingRad = observerBearingRad + Math.PI / 2; // Right is positive
+          const lateralDeltaEasting = netLateralAdjustment * Math.sin(lateralBearingRad);
+          const lateralDeltaNorthing = netLateralAdjustment * Math.cos(lateralBearingRad);
+
+          currentEasting += rangeDeltaEasting + lateralDeltaEasting;
+          currentNorthing += rangeDeltaNorthing + lateralDeltaNorthing;
+      }
+
+      // Update mission with new target coordinates
+      mission.TargetEasting = currentEasting.toFixed(0);
+      mission.TargetNorthing = currentNorthing.toFixed(0);
 
       // Recalculate firing solutions
       mission.firingSolutions = main(
-        launcherEasting,
-        launcherNorthing,
-        launcherHeight,
-        Number(mission.TargetEasting),
-        Number(mission.TargetNorthing),
-        Number(mission.TargetHeight || 0),
-        gunParamsCurrent.mass,
-        gunParamsCurrent.drag,
-        gunParamsCurrent.velocity
+          launcherEasting,
+          launcherNorthing,
+          launcherHeight,
+          Number(mission.TargetEasting),
+          Number(mission.TargetNorthing),
+          Number(mission.TargetHeight || 0),
+          gunParamsCurrent.mass,
+          gunParamsCurrent.drag,
+          gunParamsCurrent.velocity
       );
 
-      mission.HasPressedCalculate = true;
-
       // Update UI
+      updateAdjustFireButton();
+      displayFiringSolution();
+      showAdjustFire(); // Refresh UI with new coordinates
+  }
+
+  if (valid) {
       console.log("Updating UI with firing solutions");
       updateAdjustFireButton();
       displayFiringSolution();
       if (activeTab.includes('Adjust Fire')) {
-        showAdjustFire(); // Let this function display the new coordinates
+          showAdjustFire();
+      } else if (activeTab.includes('Without Forward Observer')) {
+          showWithoutObserver();
+      } else if (activeTab.includes('With Forward Observer')) {
+          showWithObserver();
       }
-    }
-  }
-
-  if (valid) {
-    console.log("Updating UI with firing solutions");
-    updateAdjustFireButton();
-    displayFiringSolution();
-    if (activeTab.includes('Adjust Fire')) {
-      showAdjustFire();
-    } else if (activeTab.includes('Without Forward Observer')) {
-      showWithoutObserver();
-    } else if (activeTab.includes('With Forward Observer')) {
-      showWithObserver();
-    }
   } else {
-    console.log("Validation failed");
+      console.log("Validation failed");
   }
 }
 function displayFiringSolution() {
