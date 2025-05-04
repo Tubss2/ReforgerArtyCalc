@@ -7,21 +7,17 @@ let fireMissions = [{
   TargetEasting: null,
   TargetNorthing: null,
   TargetHeight: null,
-  ObserverEasting: null,
-  ObserverNorthing: null,
-  ObserverBearing: null,
-  ObserverRangeToTgt: null,
-  ObserverAltitude: null,
+  ObserverBearing: null, // Only included for "With Forward Observer" missions
   adjustFireRange: null,
   adjustFireBearing: null,
   HasPressedCalculate: false,
   firingSolutions: {},
   spread: {
-    bearing: null,
-    indirect: { mils: null },
-    direct: { mils: null },
-    bearingSolution: null,
-    elevationSolution: null
+      bearing: null,
+      indirect: { mils: null },
+      direct: { mils: null },
+      bearingSolution: null,
+      elevationSolution: null
   }
 }];
 
@@ -475,16 +471,14 @@ function showWithObserver() {
   setActiveTab('With Forward Observer');
   const mission = fireMissions[selectedMissionIndex];
   document.getElementById('inputs-container').innerHTML = `
-      <input type="text" id="observer-easting" placeholder="Observer Easting (5 digits)" value="${mission.ObserverEasting || ''}">
-      <div class="error" id="observer-easting-error"></div>
-      <input type="text" id="observer-northing" placeholder="Observer Northing (5 digits)" value="${mission.ObserverNorthing || ''}">
-      <div class="error" id="observer-northing-error"></div>
-      <input type="text" id="observer-bearing" placeholder="Observer Bearing to Target (0-360 degrees)" value="${mission.ObserverBearing || ''}">
-      <div class="error" id="bearing-error"></div>
-      <input type="text" id="observer-range" placeholder="Observer Range to Target (Meters)" value="${mission.ObserverRangeToTgt || ''}">
-      <div class="error" id="observer-range-error"></div>
+      <input type="text" id="target-easting" placeholder="Target Easting (5 digits)" value="${mission.TargetEasting || ''}">
+      <div class="error" id="easting-error"></div>
+      <input type="text" id="target-northing" placeholder="Target Northing (5 digits)" value="${mission.TargetNorthing || ''}">
+      <div class="error" id="northing-error"></div>
       <input type="text" id="target-height" placeholder="Target Height (Meters)" value="${mission.TargetHeight || ''}">
       <div class="error" id="target-height-error"></div>
+      <input type="text" id="observer-bearing" placeholder="Observer Bearing to Target (0-360 degrees)" value="${mission.ObserverBearing || ''}">
+      <div class="error" id="bearing-error"></div>
       <div class="calculate-button">
           <button id="calculate-btn">Calculate</button>
       </div>
@@ -586,33 +580,43 @@ function calculate() {
       }
     } else if (activeTab.includes('With Forward Observer')) {
       console.log("Processing With Forward Observer");
-      const observerEasting = document.getElementById('observer-easting');
-      const observerNorthing = document.getElementById('observer-northing');
+      const targetEasting = document.getElementById('target-easting');
+      const targetNorthing = document.getElementById('target-northing');
+      const targetHeight = document.getElementById('target-height');
       const observerBearing = document.getElementById('observer-bearing');
-      const observerRange = document.getElementById('observer-range');
-      const targetHeightInput = document.getElementById('target-height');
   
-      const paddedObserverEasting = padToFiveDigits(observerEasting.value);
-      const paddedObserverNorthing = padToFiveDigits(observerNorthing.value);
-      console.log("Padded observer easting:", paddedObserverEasting);
-      console.log("Padded observer northing:", paddedObserverNorthing);
+      const paddedTargetEasting = padToFiveDigits(targetEasting.value);
+      const paddedTargetNorthing = padToFiveDigits(targetNorthing.value);
   
-      if (paddedObserverEasting.length !== 5 || isNaN(paddedObserverEasting)) {
-          document.getElementById('observer-easting-error').textContent = "Must be a 5-digit number.";
+      let valid = true;
+  
+      // Validate target easting
+      if (paddedTargetEasting.length !== 5 || isNaN(paddedTargetEasting)) {
+          document.getElementById('easting-error').textContent = "Must be a 5-digit number.";
           valid = false;
       } else {
-          document.getElementById('observer-easting-error').textContent = "";
-          observerEasting.value = paddedObserverEasting;
+          document.getElementById('easting-error').textContent = "";
+          targetEasting.value = paddedTargetEasting;
       }
   
-      if (paddedObserverNorthing.length !== 5 || isNaN(paddedObserverNorthing)) {
-          document.getElementById('observer-northing-error').textContent = "Must be a 5-digit number.";
+      // Validate target northing
+      if (paddedTargetNorthing.length !== 5 || isNaN(paddedTargetNorthing)) {
+          document.getElementById('northing-error').textContent = "Must be a 5-digit number.";
           valid = false;
       } else {
-          document.getElementById('observer-northing-error').textContent = "";
-          observerNorthing.value = paddedObserverNorthing;
+          document.getElementById('northing-error').textContent = "";
+          targetNorthing.value = paddedTargetNorthing;
       }
   
+      // Validate target height
+      if (isNaN(targetHeight.value) || targetHeight.value === '') {
+          document.getElementById('target-height-error').textContent = "Must be a valid number.";
+          valid = false;
+      } else {
+          document.getElementById('target-height-error').textContent = "";
+      }
+  
+      // Validate observer bearing
       if (isNaN(observerBearing.value) || observerBearing.value < 0 || observerBearing.value > 360) {
           document.getElementById('bearing-error').textContent = "Must be between 0 and 360.";
           valid = false;
@@ -620,43 +624,25 @@ function calculate() {
           document.getElementById('bearing-error').textContent = "";
       }
   
-      if (isNaN(observerRange.value) || observerRange.value === '' || Number(observerRange.value) < 0) {
-          document.getElementById('observer-range-error').textContent = "Must be a positive number.";
-          valid = false;
-      } else {
-          document.getElementById('observer-range-error').textContent = "";
-      }
-  
-      if (isNaN(targetHeightInput.value) || targetHeightInput.value === '') {
-          document.getElementById('target-height-error').textContent = "Must be a valid number.";
-          valid = false;
-      } else {
-          document.getElementById('target-height-error').textContent = "";
-      }
-  
       if (valid) {
-          mission.ObserverEasting = paddedObserverEasting;
-          mission.ObserverNorthing = paddedObserverNorthing;
+          const mission = fireMissions[selectedMissionIndex];
+          mission.TargetEasting = paddedTargetEasting;
+          mission.TargetNorthing = paddedTargetNorthing;
+          mission.TargetHeight = targetHeight.value;
           mission.ObserverBearing = observerBearing.value;
-          mission.ObserverRangeToTgt = observerRange.value;
-          mission.TargetHeight = targetHeightInput.value;
           console.log("Calculating firing solutions for With Forward Observer");
-          mission.firingSolutions = observerGridCalc(
-              launcherNorthing,
+          mission.firingSolutions = main(
               launcherEasting,
+              launcherNorthing,
               launcherHeight,
-              Number(paddedObserverEasting),
-              Number(paddedObserverNorthing),
-              Number(observerBearing.value),
-              Number(observerRange.value),
-              Number(targetHeightInput.value),
+              Number(paddedTargetEasting),
+              Number(paddedTargetNorthing),
+              Number(targetHeight.value),
               gunParamsCurrent.mass,
               gunParamsCurrent.drag,
               gunParamsCurrent.velocity
           );
           console.log("Firing solutions:", mission.firingSolutions);
-          mission.TargetEasting = mission.firingSolutions.updatedEastingTarget;
-          mission.TargetNorthing = mission.firingSolutions.updatedNorthingTarget;
           mission.HasPressedCalculate = true;
       }
   } else if (activeTab.includes('Adjust Fire')) {
