@@ -775,7 +775,7 @@ function calculate() {
         left: 0,
         right: 0
     };
-
+    console.log("Adjustments reset to:", mission.adjustments);
     // Update UI
     updateAdjustFireButton();
     displayFiringSolution();
