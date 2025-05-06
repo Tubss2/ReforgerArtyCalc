@@ -769,15 +769,17 @@ function calculate() {
           gunParamsCurrent.drag,
           gunParamsCurrent.velocity
       );
+      mission.adjustments = {
+        add: 0,
+        drop: 0,
+        left: 0,
+        right: 0
+    };
 
-      // Update UI
-      updateAdjustFireButton();
-      displayFiringSolution();
-      showAdjustFire(); // Refresh UI with new coordinates
-      document.getElementById('add-input').value = '0';
-      document.getElementById('drop-input').value = '0';
-      document.getElementById('left-input').value = '0';
-      document.getElementById('right-input').value = '0';
+    // Update UI
+    updateAdjustFireButton();
+    displayFiringSolution();
+    showAdjustFire();
   }
 
   if (valid) {
