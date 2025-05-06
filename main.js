@@ -771,13 +771,13 @@ function calculate() {
       );
 
       // Update UI
-      document.getElementById('add-input').value = '0';
-        document.getElementById('drop-input').value = '0';
-        document.getElementById('left-input').value = '0';
-        document.getElementById('right-input').value = '0';
       updateAdjustFireButton();
       displayFiringSolution();
       showAdjustFire(); // Refresh UI with new coordinates
+      document.getElementById('add-input').value = '0';
+      document.getElementById('drop-input').value = '0';
+      document.getElementById('left-input').value = '0';
+      document.getElementById('right-input').value = '0';
   }
 
   if (valid) {
