@@ -376,32 +376,35 @@ function recallMissionData() {
 function displayFireMissions() {
   const missionsContainer = document.querySelector('.fire-missions');
   missionsContainer.innerHTML = '';
-
   fireMissions.forEach((mission, index) => {
-    const missionElement = document.createElement('div');
-    missionElement.classList.add('mission-box');
-    if (index === selectedMissionIndex) missionElement.classList.add('active');
+      const missionElement = document.createElement('div');
+      missionElement.classList.add('mission-box');
+      if (index === selectedMissionIndex) missionElement.classList.add('active');
 
-    const missionNameInput = document.createElement('input');
-    missionNameInput.type = 'text';
-    missionNameInput.value = mission.name;
-    missionNameInput.readOnly = true;
-    missionElement.appendChild(missionNameInput);
+      const missionNameInput = document.createElement('input');
+      missionNameInput.type = 'text';
+      missionNameInput.value = mission.name;
+      missionNameInput.readOnly = true;
+      missionElement.appendChild(missionNameInput);
 
-    const editButton = document.createElement('button');
-    editButton.classList.add('edit-btn');
-    editButton.innerHTML = '✏️';
-    editButton.addEventListener('click', () => renameMission(index));
-    missionElement.appendChild(editButton);
+      const editButton = document.createElement('button');
+      editButton.classList.add('edit-btn');
+      editButton.innerHTML = '✏️';
+      editButton.addEventListener('click', (event) => {
+          event.stopPropagation(); // Prevent mission selection
+          console.log('Edit button clicked for mission', index);
+          renameMission(index);
+      });
+      missionElement.appendChild(editButton);
 
-    const deleteButton = document.createElement('button');
-    deleteButton.classList.add('delete-btn');
-    deleteButton.innerHTML = '❌';
-    deleteButton.addEventListener('click', () => deleteMission(index));
-    missionElement.appendChild(deleteButton);
+      const deleteButton = document.createElement('button');
+      deleteButton.classList.add('delete-btn');
+      deleteButton.innerHTML = '❌';
+      deleteButton.addEventListener('click', () => deleteMission(index));
+      missionElement.appendChild(deleteButton);
 
-    missionElement.addEventListener('click', () => selectMission(index));
-    missionsContainer.appendChild(missionElement);
+      missionElement.addEventListener('click', () => selectMission(index));
+      missionsContainer.appendChild(missionElement);
   });
 
   const newMissionBtn = document.createElement('div');
@@ -413,14 +416,21 @@ function displayFireMissions() {
 
 function renameMission(index) {
   const missionElement = document.querySelectorAll('.mission-box input')[index];
+  if (!missionElement) {
+      console.error('No input found for index', index);
+      return;
+  }
   missionElement.readOnly = false;
   missionElement.focus();
-  const onBlur = () => {
-    fireMissions[index].name = missionElement.value || `Mission ${index + 1}`;
-    missionElement.readOnly = true;
-    displayFireMissions();
+  const saveName = () => {
+      fireMissions[index].name = missionElement.value || `Mission ${index + 1}`;
+      missionElement.readOnly = true;
+      displayFireMissions();
   };
-  missionElement.addEventListener('blur', onBlur, { once: true });
+  missionElement.addEventListener('blur', saveName, { once: true });
+  missionElement.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') saveName();
+  });
 }
 
 function deleteMission(index) {
@@ -761,6 +771,10 @@ function calculate() {
       );
 
       // Update UI
+      document.getElementById('add-input').value = '0';
+        document.getElementById('drop-input').value = '0';
+        document.getElementById('left-input').value = '0';
+        document.getElementById('right-input').value = '0';
       updateAdjustFireButton();
       displayFiringSolution();
       showAdjustFire(); // Refresh UI with new coordinates
