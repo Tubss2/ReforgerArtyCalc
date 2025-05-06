@@ -93,7 +93,10 @@ function showAdjustFire() {
   const cumulativeDrop = mission.adjustments?.drop || 0;
   const cumulativeLeft = mission.adjustments?.left || 0;
   const cumulativeRight = mission.adjustments?.right || 0;
-
+  console.log("In showAdjustFire, cumulativeAdd:", cumulativeAdd);
+  console.log("In showAdjustFire, cumulativeAdd:", cumulativeDrop);
+  console.log("In showAdjustFire, cumulativeAdd:", cumulativeLeft);
+  console.log("In showAdjustFire, cumulativeAdd:", cumulativeRight);
   document.getElementById('inputs-container').innerHTML = `
       <!-- Left Side: Adjustment Inputs -->
       <div style="float: left; width: 50%;">
@@ -780,6 +783,10 @@ function calculate() {
     updateAdjustFireButton();
     displayFiringSolution();
     showAdjustFire();
+    console.log("Add input value after showAdjustFire:", document.getElementById('add-input').value);
+    console.log("Drop input value after showAdjustFire:", document.getElementById('drop-input').value);
+    console.log("Left input value after showAdjustFire:", document.getElementById('left-input').value);
+    console.log("Right input value after showAdjustFire:", document.getElementById('right-input').value);
   }
 
   if (valid) {
